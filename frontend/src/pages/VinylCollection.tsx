@@ -2,12 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { fetchVinylRecords, VinylFilters, createVinylRecord, updateVinylRecord } from '../services/vinyl';
 import { VinylRecord } from '../types/vinyl';
 import VinylForm from '../components/forms/VinylForm';
+import CollectionControls from '../components/ui/CollectionControls';
+import VinylCard from '../components/vinyl/VinylCard';
 
-const VinylCollection: React.FC = () => {
+interface VinylCollectionProps {
+    showAdd: boolean;
+    setShowAdd: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }) => {
     const [records, setRecords] = useState<VinylRecord[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [showAdd, setShowAdd] = useState(false);
     const [editingRecord, setEditingRecord] = useState<VinylRecord | null>(null);
     const [saving, setSaving] = useState(false);
 
@@ -26,6 +32,8 @@ const VinylCollection: React.FC = () => {
         sortBy: 'artistName',
         sortOrder: 'asc',
     });
+
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
     const loadRecords = async () => {
         setLoading(true);
@@ -140,68 +148,17 @@ const VinylCollection: React.FC = () => {
                             {pagination.totalPages > 1 && ` • Page ${pagination.page} of ${pagination.totalPages}`}
                         </p>
                     </div>
-                    <button
-                        onClick={() => setShowAdd(true)}
-                        className="px-4 py-2 bg-midcentury-mustard text-white rounded-lg hover:bg-midcentury-burntOrange transition-colors"
-                    >
-                        Add Record
-                    </button>
                 </div>
             </div>
 
-            {/* Simple Filters */}
-            <div className="mb-6 bg-midcentury-cream rounded-lg border border-midcentury-walnut p-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Search */}
-                    <div>
-                        <label className="block text-sm font-medium text-midcentury-charcoal mb-1">
-                            Search
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="Artist or album..."
-                            value={filters.search || ''}
-                            onChange={(e) => handleFilterChange('search', e.target.value)}
-                            className="w-full px-3 py-2 border border-midcentury-walnut rounded-md focus:outline-none focus:ring-2 focus:ring-midcentury-mustard"
-                        />
-                    </div>
-
-                    {/* Sort */}
-                    <div>
-                        <label className="block text-sm font-medium text-midcentury-charcoal mb-1">
-                            Sort by
-                        </label>
-                        <select
-                            value={`${filters.sortBy}-${filters.sortOrder}`}
-                            onChange={(e) => {
-                                const [sortBy, sortOrder] = e.target.value.split('-');
-                                handleFilterChange('sortBy', sortBy);
-                                handleFilterChange('sortOrder', sortOrder);
-                            }}
-                            className="w-full px-3 py-2 border border-midcentury-walnut rounded-md focus:outline-none focus:ring-2 focus:ring-midcentury-mustard"
-                        >
-                            <option value="artistName-asc">Artist (A-Z)</option>
-                            <option value="artistName-desc">Artist (Z-A)</option>
-                            <option value="albumName-asc">Album (A-Z)</option>
-                            <option value="albumName-desc">Album (Z-A)</option>
-                            <option value="year-asc">Year (Oldest)</option>
-                            <option value="year-desc">Year (Newest)</option>
-                            <option value="price-asc">Price (Low-High)</option>
-                            <option value="price-desc">Price (High-Low)</option>
-                        </select>
-                    </div>
-
-                    {/* Clear Filters */}
-                    <div className="flex items-end">
-                        <button
-                            onClick={clearFilters}
-                            className="w-full px-4 py-2 text-sm text-midcentury-olive hover:text-midcentury-charcoal border border-midcentury-olive rounded-md hover:bg-midcentury-olive hover:text-white transition-colors"
-                        >
-                            Clear Filters
-                        </button>
-                    </div>
-                </div>
-            </div>
+            {/* Controls Row */}
+            <CollectionControls
+                searchValue={filters.search || ''}
+                onSearchChange={val => handleFilterChange('search', val)}
+                onFilterClick={() => alert('Filter button clicked!')}
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
+            />
 
             {/* Add/Edit Form */}
             {(showAdd || editingRecord) && (
@@ -233,117 +190,27 @@ const VinylCollection: React.FC = () => {
                 </div>
             )}
 
+            {/* Records Grid */}
+            {!loading && !error && records.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+                    {records.map(record => (
+                        <VinylCard
+                            key={record.id}
+                            record={record}
+                            isFavorite={false}
+                            isPlaying={false}
+                            onFavoriteToggle={() => { }}
+                            onPlayClick={() => { }}
+                        />
+                    ))}
+                </div>
+            )}
+
             {/* Empty State */}
             {!loading && !error && records.length === 0 && (
                 <div className="text-center py-12">
                     <p className="text-midcentury-charcoal mb-4">No records found.</p>
-                    <button
-                        onClick={() => setShowAdd(true)}
-                        className="px-4 py-2 bg-midcentury-mustard text-white rounded-lg hover:bg-midcentury-burntOrange"
-                    >
-                        Add Your First Record
-                    </button>
                 </div>
-            )}
-
-            {/* Records Grid */}
-            {!loading && !error && records.length > 0 && (
-                <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {records.map((record) => (
-                            <div
-                                key={record.id}
-                                className="bg-midcentury-cream rounded-lg border border-midcentury-walnut p-4 hover:shadow-md transition-shadow"
-                            >
-                                <div className="flex justify-between items-start mb-3">
-                                    <div className="flex-1">
-                                        <h3 className="font-semibold text-midcentury-charcoal mb-1">
-                                            {record.artistName || 'Unknown Artist'}
-                                        </h3>
-                                        <h4 className="text-midcentury-olive text-sm">
-                                            {record.albumName || 'Unknown Album'}
-                                        </h4>
-                                    </div>
-                                    <span className={`px-2 py-1 text-xs font-medium rounded ${getStatusColor(record.status || 'Unknown')}`}>
-                                        {record.status || 'Unknown'}
-                                    </span>
-                                </div>
-
-                                <div className="space-y-1 text-sm text-midcentury-charcoal mb-3">
-                                    <div>{record.year || 'Unknown Year'} • {record.format || 'Vinyl'}</div>
-                                    <div>{record.genre || 'Unknown Genre'}</div>
-                                    <div>Owner: {record.owner || 'Unknown'}</div>
-                                    <div>Price: {(() => {
-                                        const price = record.price;
-
-                                        // Handle null/undefined/empty values
-                                        if (price === null || price === undefined || price === 0) {
-                                            return 'Not specified';
-                                        }
-
-                                        // Handle numeric prices
-                                        if (typeof price === 'number' && !isNaN(price)) {
-                                            return `$${price.toFixed(2)}`;
-                                        }
-
-                                        return 'Not specified';
-                                    })()}</div>
-                                </div>
-
-                                {record.notes && (
-                                    <div className="text-xs text-midcentury-olive mb-3 border-t pt-2">
-                                        {record.notes}
-                                    </div>
-                                )}
-
-                                <button
-                                    onClick={() => handleEditClick(record)}
-                                    className="w-full text-sm text-midcentury-burntOrange hover:text-midcentury-charcoal font-medium py-2 border-t border-gray-100"
-                                    disabled={editingRecord?.id === record.id}
-                                >
-                                    Edit
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Pagination */}
-                    {pagination.totalPages > 1 && (
-                        <div className="mt-8 flex items-center justify-center gap-2">
-                            <button
-                                onClick={() => handlePageChange(pagination.page - 1)}
-                                disabled={pagination.page <= 1}
-                                className="px-3 py-2 text-sm border border-midcentury-walnut rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-midcentury-walnut hover:text-white transition-colors"
-                            >
-                                Previous
-                            </button>
-
-                            {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                                const pageNum = Math.max(1, Math.min(pagination.totalPages - 4, pagination.page - 2)) + i;
-                                return (
-                                    <button
-                                        key={pageNum}
-                                        onClick={() => handlePageChange(pageNum)}
-                                        className={`px-3 py-2 text-sm border rounded-md transition-colors ${pageNum === pagination.page
-                                            ? 'bg-midcentury-mustard text-white border-midcentury-mustard'
-                                            : 'border-midcentury-walnut hover:bg-midcentury-walnut hover:text-white'
-                                            }`}
-                                    >
-                                        {pageNum}
-                                    </button>
-                                );
-                            })}
-
-                            <button
-                                onClick={() => handlePageChange(pagination.page + 1)}
-                                disabled={pagination.page >= pagination.totalPages}
-                                className="px-3 py-2 text-sm border border-midcentury-walnut rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-midcentury-walnut hover:text-white transition-colors"
-                            >
-                                Next
-                            </button>
-                        </div>
-                    )}
-                </>
             )}
         </div>
     );

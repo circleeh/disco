@@ -1,7 +1,11 @@
 import React from 'react';
 import { useAuth } from '../../stores/AuthContext';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+    onAddRecordClick?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onAddRecordClick }) => {
     const { user, loading, login, logout } = useAuth();
 
     return (
@@ -13,6 +17,17 @@ const Header: React.FC = () => {
                         <h1 className="text-xl font-bold text-midcentury-charcoal" style={{ fontFamily: 'Avenir, sans-serif' }}>Disco</h1>
                         <span className="ml-2 text-sm text-midcentury-olive">Vinyl Collection</span>
                     </div>
+
+                    {/* Add Record Button */}
+                    <button
+                        className="flex items-center px-4 py-2 bg-midcentury-mustard text-white rounded-lg hover:bg-midcentury-burntOrange transition-colors font-semibold shadow-sm"
+                        onClick={onAddRecordClick}
+                    >
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Add Record
+                    </button>
 
                     {/* User Menu */}
                     <div className="flex items-center space-x-4">
