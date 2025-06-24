@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   build-and-push-with-buildah:
-    uses: circleeh/workflows-build-containers/.github/workflows/buildah-ci.yaml
+    uses: circleeh/workflows-build-containers/.github/workflows/buildah-ci.yaml@v1
     with:
       image_description: "Disco - Vinyl Collection"
       image_authors: "Chris Poupart <chris.poupart@gmail.com>"
