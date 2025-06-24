@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/circleeh/disco/compare/v1.0.0...v1.1.0) (2025-06-24)
+
+### Features
+
+* **ci:** 👷 add separate build jobs for backend and frontend ([f85d64f](https://github.com/circleeh/disco/commit/f85d64f9ca7dd973c762fe570d6e7c78ded1bdfc))
+
 ## 1.0.0 (2025-06-24)
 
 ### Features
