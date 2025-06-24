@@ -1,3 +1,9 @@
+## [1.4.1](https://github.com/circleeh/disco/compare/v1.4.0...v1.4.1) (2025-06-24)
+
+### Bug Fixes
+
+* **frontend:** 🔥 remove non-root user setup ([2a75a09](https://github.com/circleeh/disco/commit/2a75a09e8420da5d3c27b1bd9e94fa10206a71c9))
+
 ## [1.4.0](https://github.com/circleeh/disco/compare/v1.3.0...v1.4.0) (2025-06-24)
 
 ### Features
