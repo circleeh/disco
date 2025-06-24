@@ -1,0 +1,21 @@
+on:
+  push:
+    branches: ["**"]
+  workflow_dispatch:
+  release:
+    types: [created]
+
+permissions:
+  packages: write
+  issues: read
+  contents: write
+
+jobs:
+  build-and-push-with-buildah:
+    uses: circleeh/workflows-build-containers/.github/workflows/buildah-ci.yaml
+    with:
+      image_description: "Disco - Vinyl Collection"
+      image_authors: "Chris Poupart <chris.poupart@gmail.com>"
+      image_title: ${{ github.event.repository.name }}
+    secrets:
+      CALLING_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
