@@ -20,12 +20,14 @@ const vinylFiltersSchema = Joi.object({
     page: Joi.number().integer().min(1).optional(),
     limit: Joi.number().integer().min(1).max(100).optional(),
     artist: Joi.string().max(255).optional(),
+    albumName: Joi.string().max(255).optional(),
     genre: Joi.string().max(100).optional(),
     status: Joi.string().valid('Owned', 'Wanted', 'Borrowed', 'Loaned', 'Re-purchase Necessary').optional(),
     owner: Joi.string().max(100).optional(),
     search: Joi.string().max(255).optional(),
     sortBy: Joi.string().valid('artistName', 'albumName', 'year', 'price').optional(),
     sortOrder: Joi.string().valid('asc', 'desc').optional(),
+    year: Joi.number().integer().min(1900).max(new Date().getFullYear() + 1).optional(),
 });
 
 // Validation middleware factory

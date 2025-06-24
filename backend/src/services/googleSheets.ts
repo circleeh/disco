@@ -679,21 +679,37 @@ class GoogleSheetsService {
     // Private helper methods
     private applyFilters(records: VinylRecord[], filters: VinylFilters): VinylRecord[] {
         return records.filter(record => {
+            // Fuzzy (case-insensitive substring) filtering for text fields
             if (filters.artist && !record.artistName.toLowerCase().includes(filters.artist.toLowerCase())) {
                 return false;
             }
-            if (filters.genre && record.genre !== filters.genre) {
+            if (filters.albumName && !record.albumName.toLowerCase().includes(filters.albumName.toLowerCase())) {
+                return false;
+            }
+            if (filters.genre && !record.genre.toLowerCase().includes(filters.genre.toLowerCase())) {
+                return false;
+            }
+            if (filters.owner && !record.owner.toLowerCase().includes(filters.owner.toLowerCase())) {
+                return false;
+            }
+            if (filters.notes && record.notes && !record.notes.toLowerCase().includes(filters.notes.toLowerCase())) {
                 return false;
             }
             if (filters.status && record.status !== filters.status) {
                 return false;
             }
-            if (filters.owner && record.owner !== filters.owner) {
+            if (filters.year && record.year !== Number(filters.year)) {
                 return false;
             }
             if (filters.search) {
                 const searchTerm = filters.search.toLowerCase();
-                const searchableText = `${record.artistName} ${record.albumName} `.toLowerCase();
+                const searchableText = `
+                    ${record.artistName}
+                    ${record.albumName}
+                    ${record.genre}
+                    ${record.owner}
+                    ${record.notes || ''}
+                `.toLowerCase();
                 if (!searchableText.includes(searchTerm)) {
                     return false;
                 }
