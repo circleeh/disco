@@ -1,12 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken, getAuthToken, unauthorizedResponse } from '../utils';
-import { User } from '../types';
+import { User, AuthenticatedRequest } from '../types';
 import config from '../config';
-
-// Extend Request interface for authenticated requests
-interface AuthenticatedRequest extends Request {
-    user?: User;
-}
 
 // Middleware to authenticate JWT tokens
 export const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
