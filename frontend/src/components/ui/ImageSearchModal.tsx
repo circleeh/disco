@@ -18,7 +18,6 @@ const ImageSearchModal: React.FC<ImageSearchModalProps> = ({
     const [results, setResults] = useState<ImageSearchResult[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [downloading, setDownloading] = useState(false);
 
     // Debounced search function
@@ -70,7 +69,6 @@ const ImageSearchModal: React.FC<ImageSearchModalProps> = ({
     };
 
     const handleImageClick = async (imageUrl: string) => {
-        setSelectedImage(imageUrl);
         setDownloading(true);
         try {
             const base64Data = await downloadImageAsBase64(imageUrl);
@@ -99,7 +97,6 @@ const ImageSearchModal: React.FC<ImageSearchModalProps> = ({
         setQuery('');
         setResults([]);
         setError(null);
-        setSelectedImage(null);
         setDownloading(false);
         onClose();
     };

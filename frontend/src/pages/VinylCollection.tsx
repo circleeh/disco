@@ -79,22 +79,6 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
         });
     };
 
-    const handlePageChange = (newPage: number) => {
-        setFilters(prev => ({
-            ...prev,
-            page: newPage,
-        }));
-    };
-
-    const clearFilters = () => {
-        setFilters({
-            page: 1,
-            limit: 50,
-            sortBy: 'artistName',
-            sortOrder: 'asc',
-        });
-    };
-
     const handleAdd = async (data: any) => {
         if (!user) {
             alert('You must be logged in to add records.');
@@ -141,17 +125,6 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
 
     const handleCancelEdit = () => {
         setEditingRecord(null);
-    };
-
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'Owned': return 'bg-green-100 text-green-800';
-            case 'Wanted': return 'bg-yellow-100 text-yellow-800';
-            case 'Borrowed': return 'bg-blue-100 text-blue-800';
-            case 'Loaned': return 'bg-purple-100 text-purple-800';
-            case 'Re-purchase Necessary': return 'bg-red-100 text-red-800';
-            default: return 'bg-gray-100 text-gray-800';
-        }
     };
 
     return (
@@ -243,8 +216,6 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
                                 <VinylListItem
                                     key={record.id}
                                     record={record}
-                                    isPlaying={false}
-                                    onPlayClick={() => { }}
                                     onEditClick={user ? handleEditClick : undefined}
                                 />
                             ))}
