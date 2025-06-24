@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken, getAuthToken, unauthorizedResponse } from '../utils';
 import { User } from '../types';
+import config from '../config';
 
 // Extend Request interface for authenticated requests
 interface AuthenticatedRequest extends Request {
@@ -45,4 +46,24 @@ export const optionalAuth = (req: AuthenticatedRequest, res: Response, next: Nex
     }
 
     next();
+};
+
+// Conditional authentication middleware - requires auth for write operations, optional for read operations
+export const conditionalAuth = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+    const isWriteOperation = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method);
+
+    if (isWriteOperation) {
+        // Always require authentication for write operations
+        console.log('🔐 Write operation detected, requiring authentication');
+        authenticateToken(req, res, next);
+    } else {
+        // For read operations, check the feature flag
+        if (config.allowPublicRead) {
+            console.log('📖 Read operation with public access enabled, using optional auth');
+            optionalAuth(req, res, next);
+        } else {
+            console.log('🔐 Read operation with public access disabled, requiring authentication');
+            authenticateToken(req, res, next);
+        }
+    }
 };

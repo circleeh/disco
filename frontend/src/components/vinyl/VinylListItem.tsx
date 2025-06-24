@@ -52,17 +52,19 @@ const VinylListItem: React.FC<VinylListItemProps> = ({
                             </p>
                         </div>
                         <div className="flex items-center space-x-2 ml-4">
-                            {/* Edit Button */}
-                            <button
-                                className="text-midcentury-olive hover:text-midcentury-burntOrange p-1"
-                                onClick={() => onEditClick && onEditClick(record)}
-                                aria-label="Edit record"
-                                title="Edit record"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                            </button>
+                            {/* Edit Button - only show if onEditClick is provided */}
+                            {onEditClick && (
+                                <button
+                                    className="text-midcentury-olive hover:text-midcentury-burntOrange p-1"
+                                    onClick={() => onEditClick(record)}
+                                    aria-label="Edit record"
+                                    title="Edit record"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </button>
+                            )}
                         </div>
                     </div>
 

@@ -113,4 +113,6 @@ export interface Config {
     cacheTTL: number;
     cacheInvalidationInterval: number;
     enableCache: boolean;
+    // Feature flags
+    allowPublicRead: boolean;
 }

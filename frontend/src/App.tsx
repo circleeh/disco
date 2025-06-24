@@ -38,9 +38,7 @@ function App() {
                         <Route
                             path="/"
                             element={
-                                <ProtectedRoute>
-                                    <VinylCollection showAdd={showAdd} setShowAdd={setShowAdd} />
-                                </ProtectedRoute>
+                                <VinylCollection showAdd={showAdd} setShowAdd={setShowAdd} />
                             }
                         />
                         <Route path="*" element={<Navigate to="/" />} />

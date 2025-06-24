@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import * as vinylController from '../controllers/vinyl';
-import { authenticateToken } from '../middleware/auth';
+import { conditionalAuth } from '../middleware/auth';
 import { validateVinylRecord, validateVinylFilters, validateVinylUpdate } from '../middleware/validation';
 
 const router = Router();
 
-// Apply authentication to all vinyl routes
-router.use(authenticateToken as any);
+// Apply conditional authentication to all vinyl routes
+router.use(conditionalAuth as any);
 
 // GET /api/vinyl - Get all records with filtering and pagination
 router.get('/', validateVinylFilters, vinylController.getRecords);

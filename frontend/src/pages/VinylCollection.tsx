@@ -6,6 +6,7 @@ import VinylListItem from '../components/vinyl/VinylListItem';
 import VinylForm from '../components/forms/VinylForm';
 import CollectionControls from '../components/ui/CollectionControls';
 import AlbumFilterModal from '../components/ui/AlbumFilterModal';
+import { useAuth } from '../stores/AuthContext';
 
 interface VinylCollectionProps {
     showAdd: boolean;
@@ -13,6 +14,7 @@ interface VinylCollectionProps {
 }
 
 const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }) => {
+    const { user } = useAuth();
     const [records, setRecords] = useState<VinylRecord[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -94,6 +96,10 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
     };
 
     const handleAdd = async (data: any) => {
+        if (!user) {
+            alert('You must be logged in to add records.');
+            return;
+        }
         setSaving(true);
         try {
             await createVinylRecord(data);
@@ -107,6 +113,10 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
     };
 
     const handleEdit = async (data: any) => {
+        if (!user) {
+            alert('You must be logged in to edit records.');
+            return;
+        }
         if (!editingRecord) return;
         setSaving(true);
         try {
@@ -121,6 +131,10 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
     };
 
     const handleEditClick = (record: VinylRecord) => {
+        if (!user) {
+            alert('You must be logged in to edit records.');
+            return;
+        }
         setEditingRecord(record);
         setShowAdd(false);
     };
@@ -146,10 +160,17 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
             <div className="mb-8">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-midcentury-charcoal" style={{ fontFamily: 'Avenir, sans-serif' }}>My Vinyl Collection</h1>
+                        <h1 className="text-2xl font-bold text-midcentury-charcoal" style={{ fontFamily: 'Avenir, sans-serif' }}>
+                            {user ? 'My Vinyl Collection' : 'Vinyl Collection'}
+                        </h1>
                         <p className="text-midcentury-olive mt-1">
                             {pagination.total} {pagination.total === 1 ? 'record' : 'records'}
                             {pagination.totalPages > 1 && ` • Page ${pagination.page} of ${pagination.totalPages}`}
+                            {!user && (
+                                <span className="ml-2 text-sm text-midcentury-burntOrange">
+                                    (Login to add or edit records)
+                                </span>
+                            )}
                         </p>
                     </div>
                 </div>
@@ -212,7 +233,7 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
                                     record={record}
                                     isPlaying={false}
                                     onPlayClick={() => { }}
-                                    onEditClick={handleEditClick}
+                                    onEditClick={user ? handleEditClick : undefined}
                                 />
                             ))}
                         </div>
@@ -224,7 +245,7 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
                                     record={record}
                                     isPlaying={false}
                                     onPlayClick={() => { }}
-                                    onEditClick={handleEditClick}
+                                    onEditClick={user ? handleEditClick : undefined}
                                 />
                             ))}
                         </div>

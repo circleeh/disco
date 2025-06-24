@@ -40,7 +40,9 @@ export const config: Config = {
     // Cache configuration
     cacheTTL: parseInt(process.env.CACHE_TTL || '300000', 10), // 5 minutes in milliseconds
     cacheInvalidationInterval: parseInt(process.env.CACHE_INVALIDATION_INTERVAL || '1800000', 10), // 30 minutes in milliseconds
-    enableCache: process.env.ENABLE_CACHE !== 'false' // Default to true
+    enableCache: process.env.ENABLE_CACHE !== 'false', // Default to true
+    // Feature flags
+    allowPublicRead: process.env.ALLOW_PUBLIC_READ !== 'false' // Default to true
 };
 
 // Validate configuration
