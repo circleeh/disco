@@ -1,3 +1,9 @@
+## [1.5.0](https://github.com/circleeh/disco/compare/v1.4.1...v1.5.0) (2025-06-24)
+
+### Features
+
+* **frontend:** ➕ add envsubst for nginx config templating ([967376a](https://github.com/circleeh/disco/commit/967376aec310b243d361b21790ab3937a031d8f6))
+
 ## [1.4.1](https://github.com/circleeh/disco/compare/v1.4.0...v1.4.1) (2025-06-24)
 
 ### Bug Fixes
