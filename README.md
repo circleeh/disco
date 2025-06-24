@@ -21,18 +21,21 @@ A mobile-first web application for managing vinyl record collections with Google
 ### Development Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd disco
    ```
 
 2. **Run the setup script**
+
    ```bash
    chmod +x scripts/setup.sh
    ./scripts/setup.sh
    ```
 
 3. **Configure environment variables**
+
    ```bash
    # Copy the example environment file
    cp backend/.env.example backend/.env
