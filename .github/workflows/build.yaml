@@ -18,7 +18,7 @@ jobs:
       image_authors: "Chris Poupart <chris.poupart@gmail.com>"
       image_title: ${{ github.event.repository.name }}-backend
       build_context: ./backend
-      containerfiles: Dockerfile
+      containerfiles: ./backend/Dockerfile
     secrets:
       CALLING_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -29,6 +29,6 @@ jobs:
       image_authors: "Chris Poupart <chris.poupart@gmail.com>"
       image_title: ${{ github.event.repository.name }}-frontend
       build_context: ./frontend
-      containerfiles: Dockerfile
+      containerfiles: ./frontend/Dockerfile
     secrets:
       CALLING_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
