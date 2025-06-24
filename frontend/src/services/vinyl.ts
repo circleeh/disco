@@ -24,9 +24,18 @@ export interface VinylFilters {
 }
 
 export async function fetchVinylRecords(filters: VinylFilters = {}): Promise<VinylListResponse> {
-    const params = { ...filters };
+    // Clean up empty filter parameters to avoid sending empty strings
+    const cleanParams: any = { ...filters };
+
+    // Remove empty string values
+    Object.keys(cleanParams).forEach(key => {
+        if (cleanParams[key] === '' || cleanParams[key] === null || cleanParams[key] === undefined) {
+            delete cleanParams[key];
+        }
+    });
+
     const res = await axios.get('/api/vinyl', {
-        params,
+        params: cleanParams,
         withCredentials: true,
     });
     return res.data.data || res.data;
@@ -39,5 +48,21 @@ export async function createVinylRecord(data: Omit<VinylRecord, 'id' | 'createdA
 
 export async function updateVinylRecord(id: string, data: Partial<VinylRecord>) {
     const res = await axios.put(`/api/vinyl/${id}`, data, { withCredentials: true });
+    return res.data.data || res.data;
+}
+
+// Metadata functions for filter dropdowns
+export async function fetchGenres(): Promise<string[]> {
+    const res = await axios.get('/api/metadata/genres', { withCredentials: true });
+    return res.data.data || res.data;
+}
+
+export async function fetchArtists(): Promise<string[]> {
+    const res = await axios.get('/api/metadata/artists', { withCredentials: true });
+    return res.data.data || res.data;
+}
+
+export async function fetchOwners(): Promise<string[]> {
+    const res = await axios.get('/api/metadata/owners', { withCredentials: true });
     return res.data.data || res.data;
 }
