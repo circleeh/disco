@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { fetchVinylRecords, VinylFilters, createVinylRecord, updateVinylRecord } from '../services/vinyl';
 import { VinylRecord } from '../types/vinyl';
+import VinylCard from '../components/vinyl/VinylCard';
+import VinylListItem from '../components/vinyl/VinylListItem';
 import VinylForm from '../components/forms/VinylForm';
 import CollectionControls from '../components/ui/CollectionControls';
-import VinylCard from '../components/vinyl/VinylCard';
 import AlbumFilterModal from '../components/ui/AlbumFilterModal';
 
 interface VinylCollectionProps {
@@ -200,21 +201,35 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
                 </div>
             )}
 
-            {/* Records Grid */}
+            {/* Records Display */}
             {!loading && !error && records.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
-                    {records.map(record => (
-                        <VinylCard
-                            key={record.id}
-                            record={record}
-                            isFavorite={false}
-                            isPlaying={false}
-                            onFavoriteToggle={() => { }}
-                            onPlayClick={() => { }}
-                            onEditClick={handleEditClick}
-                        />
-                    ))}
-                </div>
+                <>
+                    {viewMode === 'grid' ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+                            {records.map(record => (
+                                <VinylCard
+                                    key={record.id}
+                                    record={record}
+                                    isPlaying={false}
+                                    onPlayClick={() => { }}
+                                    onEditClick={handleEditClick}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="space-y-4 mb-8">
+                            {records.map(record => (
+                                <VinylListItem
+                                    key={record.id}
+                                    record={record}
+                                    isPlaying={false}
+                                    onPlayClick={() => { }}
+                                    onEditClick={handleEditClick}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </>
             )}
 
             {/* Empty State */}
