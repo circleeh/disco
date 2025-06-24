@@ -4,7 +4,7 @@
 
 Disco is a full-stack web application with a clear separation between frontend and backend services:
 
-```
+```text
 ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │    Backend      │
 │   (React/Vite)  │◄──►│  (Express/TS)   │
@@ -52,6 +52,7 @@ export default defineConfig({
 ```
 
 This means:
+
 - Frontend makes requests to `/api/*`
 - Vite automatically forwards these to `http://localhost:5000/api/*`
 - No CORS issues in development
@@ -67,6 +68,7 @@ This means:
 ### Quick Start
 
 1. **Clone and setup**
+
    ```bash
    git clone <repository-url>
    cd disco
@@ -75,6 +77,7 @@ This means:
    ```
 
 2. **Configure environment**
+
    ```bash
    cp backend/.env.example backend/.env
    # Edit backend/.env with your Google Cloud credentials
@@ -83,12 +86,14 @@ This means:
 3. **Start development servers**
 
    **Option A: Use the development script (recommended)**
+
    ```bash
    chmod +x scripts/dev.sh
    ./scripts/dev.sh
    ```
 
    **Option B: Manual startup**
+
    ```bash
    # Terminal 1: Backend
    cd backend && npm run dev
@@ -98,6 +103,7 @@ This means:
    ```
 
    **Option C: Docker Compose**
+
    ```bash
    docker-compose up
    ```
@@ -177,7 +183,8 @@ FRONTEND_URL=http://localhost:3000
 
 #### Common Issues
 
-**Port already in use**
+##### Port already in use
+
 ```bash
 # Check what's using the port
 lsof -i :3000
