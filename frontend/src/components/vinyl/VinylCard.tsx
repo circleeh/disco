@@ -67,6 +67,7 @@ const VinylCard: React.FC<VinylCardProps> = ({
                 </div>
                 <div className="flex items-center justify-between mt-2">
                     <span className="px-2 py-0.5 rounded-full bg-midcentury-cream border border-midcentury-walnut text-xs font-semibold">{record.status}</span>
+                    <span className="text-midcentury-olive text-xs">{record.owner}</span>
                     <span className="font-bold text-midcentury-charcoal text-base">${record.price.toFixed(2)}</span>
                 </div>
             </div>
