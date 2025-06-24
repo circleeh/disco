@@ -15,8 +15,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     }
 
     if (!user) {
-        console.log('❌ No user found, showing login message');
-        return <div className="text-center py-8">Please log in to access this page.</div>;
+        // Do not render a duplicate login message; Header handles login UI
+        return null;
     }
 
     console.log('✅ User authenticated, rendering protected content');

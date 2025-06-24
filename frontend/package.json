@@ -4,8 +4,10 @@
   "type": "module",
   "main": "tailwind.config.js",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "concurrently \"npm:dev:css\" \"npm:dev:vite\"",
+    "dev:vite": "vite",
+    "dev:css": "tailwindcss -i ./src/index.css -o ./src/output.css --watch",
+    "build": "tailwindcss -i ./src/index.css -o ./src/output.css && tsc && vite build",
     "preview": "vite preview",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,11 +29,11 @@
     "@types/node": "^24.0.3",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.5.2",
+    "@vitejs/plugin-react": "^4.6.0",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.10",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5"
+    "vite": "^7.0.0"
   }
 }

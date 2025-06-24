@@ -4,6 +4,7 @@ import { VinylRecord } from '../types/vinyl';
 import VinylForm from '../components/forms/VinylForm';
 import CollectionControls from '../components/ui/CollectionControls';
 import VinylCard from '../components/vinyl/VinylCard';
+import AlbumFilterModal from '../components/ui/AlbumFilterModal';
 
 interface VinylCollectionProps {
     showAdd: boolean;
@@ -34,6 +35,8 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
     });
 
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+    const [filterModalOpen, setFilterModalOpen] = useState(false);
 
     const loadRecords = async () => {
         setLoading(true);
@@ -155,9 +158,16 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
             <CollectionControls
                 searchValue={filters.search || ''}
                 onSearchChange={val => handleFilterChange('search', val)}
-                onFilterClick={() => alert('Filter button clicked!')}
+                onFilterClick={() => setFilterModalOpen(true)}
                 viewMode={viewMode}
                 onViewModeChange={setViewMode}
+            />
+
+            <AlbumFilterModal
+                isOpen={filterModalOpen}
+                onClose={() => setFilterModalOpen(false)}
+                currentFilters={filters}
+                onApply={newFilters => setFilters({ ...newFilters, page: 1, limit: filters.limit, sortBy: filters.sortBy, sortOrder: filters.sortOrder })}
             />
 
             {/* Add/Edit Form */}
