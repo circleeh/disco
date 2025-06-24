@@ -30,6 +30,12 @@ export const handleGoogleCallback = (req: Request, res: Response): void => {
         try {
             const authResponse = authService.generateAuthResponse(user);
 
+            if (!authResponse?.token) {
+                console.error('Failed to generate authentication token for user:', user.id);
+                res.redirect(`${config.frontendUrl}?error=auth_failed`);
+                return;
+            }
+
             // Redirect to frontend with success and token
             const token = encodeURIComponent(authResponse.token);
             const userData = encodeURIComponent(JSON.stringify(authResponse.user));
