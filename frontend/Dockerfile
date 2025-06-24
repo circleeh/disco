@@ -34,8 +34,10 @@ RUN chown -R nginx:nginx /usr/share/nginx/html
 # Expose port 8080
 EXPOSE 8080
 
-# Create startup script to substitute environment variables
+# Create startup script to substitute environment variables with defaults
 RUN echo '#!/bin/bash' > /docker-entrypoint.sh && \
+    echo 'export BACKEND_HOST=${BACKEND_HOST:-disco-backend}' >> /docker-entrypoint.sh && \
+    echo 'export BACKEND_PORT=${BACKEND_PORT:-5000}' >> /docker-entrypoint.sh && \
     echo 'envsubst < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf' >> /docker-entrypoint.sh && \
     echo 'nginx -g "daemon off;"' >> /docker-entrypoint.sh && \
     chmod +x /docker-entrypoint.sh
