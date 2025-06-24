@@ -8,6 +8,7 @@ export interface VinylRecord {
     price: number;
     owner: string;
     status: 'Owned' | 'Wanted' | 'Borrowed' | 'Loaned' | 'Re-purchase Necessary';
+    coverArt?: string; // Base64 encoded image
     notes?: string;
     createdAt: string;
     updatedAt: string;
@@ -24,6 +25,7 @@ export interface VinylRecordWithNulls {
     price: number | null;
     owner: string | null;
     status: 'Owned' | 'Wanted' | 'Borrowed' | 'Loaned' | 'Re-purchase Necessary' | null;
+    coverArt?: string | null; // Base64 encoded image
     notes?: string | null;
     createdAt: string | null;
     updatedAt: string | null;

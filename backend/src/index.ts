@@ -11,6 +11,7 @@ import authService from './services/auth';
 import authRoutes from './routes/auth';
 import vinylRoutes from './routes/vinyl';
 import metadataRoutes from './routes/metadata';
+import imageSearchRoutes from './routes/imageSearch';
 
 // Validate configuration
 validateConfig();
@@ -59,6 +60,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/vinyl', vinylRoutes);
 app.use('/api/metadata', metadataRoutes);
+app.use('/api/image-search', imageSearchRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

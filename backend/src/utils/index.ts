@@ -108,10 +108,10 @@ export const getAuthToken = (req: Request): string | null => {
 export const formatGoogleSheetsRange = (sheetName: string = 'Vinyl_Collection'): string => {
     // Try different formats for sheet names with spaces
     const ranges = [
-        `'${sheetName}'!A:K`, // Quoted sheet name with column range
-        `${sheetName}!A:K`,   // Unquoted sheet name with column range
-        'A:K',                // Just column range (default sheet)
-        'Sheet1!A:K',         // Common default sheet name
+        `'${sheetName}'!A:L`, // Quoted sheet name with column range
+        `${sheetName}!A:L`,   // Unquoted sheet name with column range
+        'A:L',                // Just column range (default sheet)
+        'Sheet1!A:L',         // Common default sheet name
         'Sheet1',             // Just the sheet name
         sheetName,            // Just the provided sheet name
     ];
@@ -158,9 +158,10 @@ export const parseGoogleSheetsRow = (row: any[]): any => {
         price: parsedPrice,
         owner: row[6] || '',
         status: row[7] || 'Owned',
-        notes: row[8] || '',
-        createdAt: row[9] ? new Date(row[9]) : new Date(),
-        updatedAt: row[10] ? new Date(row[10]) : new Date()
+        coverArt: row[8] || '',
+        notes: row[9] || '',
+        createdAt: row[10] ? new Date(row[10]) : new Date(),
+        updatedAt: row[11] ? new Date(row[11]) : new Date()
     };
 };
 
@@ -174,6 +175,7 @@ export const formatGoogleSheetsRowData = (record: any): any[] => {
         record.price,
         record.owner,
         record.status,
+        record.coverArt || '',
         record.notes || '',
         record.createdAt ? formatDate(record.createdAt) : formatDate(new Date()),
         record.updatedAt ? formatDate(record.updatedAt) : formatDate(new Date())

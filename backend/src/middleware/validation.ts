@@ -7,11 +7,12 @@ const vinylRecordSchema = Joi.object({
     artistName: Joi.string().required().min(1).max(255),
     albumName: Joi.string().required().min(1).max(255),
     year: Joi.number().integer().min(1900).max(new Date().getFullYear() + 1),
-    format: Joi.string().valid('Vinyl', 'CD', 'Cassette', 'Digital').required(),
+    format: Joi.string().valid('LP', 'EP', '7" Single', '10" Single', '12" Single', '10" EP', '12" EP', '12" LP').required(),
     genre: Joi.string().required().min(1).max(100),
-    price: Joi.number().positive().precision(2),
+    price: Joi.number().min(0).precision(2), // Allow 0 and positive numbers
     owner: Joi.string().required().min(1).max(100),
     status: Joi.string().valid('Owned', 'Wanted', 'Borrowed', 'Loaned', 'Re-purchase Necessary').required(),
+    coverArt: Joi.string().max(1000000).allow('').optional(), // Base64 encoded image, max ~750KB
     notes: Joi.string().max(1000).allow('').optional(),
 });
 
@@ -94,9 +95,9 @@ export const validateVinylUpdate = validate(
         artistName: Joi.string().min(1).max(255).optional(),
         albumName: Joi.string().min(1).max(255).optional(),
         year: Joi.number().integer().min(1900).max(new Date().getFullYear() + 1).optional(),
-        format: Joi.string().valid('Vinyl', 'CD', 'Cassette', 'Digital').optional(),
+        format: Joi.string().valid('LP', 'EP', '7" Single', '10" Single', '12" Single', '10" EP', '12" EP', '12" LP').optional(),
         genre: Joi.string().min(1).max(100).optional(),
-        price: Joi.number().positive().precision(2).optional(),
+        price: Joi.number().min(0).precision(2).optional(),
         owner: Joi.string().min(1).max(100).optional(),
         status: Joi.string().valid('Owned', 'Wanted', 'Borrowed', 'Loaned', 'Re-purchase Necessary').optional(),
         notes: Joi.string().max(1000).allow('').optional(),

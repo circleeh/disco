@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { successResponse, notFoundResponse, serverErrorResponse } from '../utils';
 import { VinylFilters, VinylRecord } from '../types';
 import googleSheetsService from '../services/googleSheets';
+import imageSearchService from '../services/imageSearch';
 
 // Get all vinyl records with filtering and pagination
 export const getRecords = async (req: Request, res: Response): Promise<void> => {
@@ -42,6 +43,13 @@ export const getRecordById = async (req: Request, res: Response): Promise<void> 
 export const createRecord = async (req: Request, res: Response): Promise<void> => {
     try {
         const recordData = req.body;
+
+        // Optimize cover art if present
+        if (recordData.coverArt) {
+            console.log('🖼️ Optimizing cover art for new record');
+            recordData.coverArt = await imageSearchService.optimizeBase64Image(recordData.coverArt, 200, 200);
+        }
+
         const newRecord = await googleSheetsService.createRecord(recordData);
 
         successResponse(res, newRecord, 201);
@@ -64,6 +72,12 @@ export const updateRecord = async (req: Request, res: Response): Promise<void> =
         const { id } = req.params;
         const decodedId = decodeURIComponent(id);
         const updates = req.body;
+
+        // Optimize cover art if present
+        if (updates.coverArt) {
+            console.log('🖼️ Optimizing cover art for updated record');
+            updates.coverArt = await imageSearchService.optimizeBase64Image(updates.coverArt, 200, 200);
+        }
 
         console.log('🔄 Updating record with ID:', { original: id, decoded: decodedId });
 

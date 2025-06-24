@@ -20,8 +20,20 @@ const VinylCard: React.FC<VinylCardProps> = ({
         <div className="bg-white rounded-xl shadow border border-midcentury-walnut flex flex-col overflow-hidden hover:shadow-lg transition-shadow">
             {/* Album Cover */}
             <div className="relative h-48 flex items-center justify-center bg-midcentury-cream">
-                {/* Placeholder image */}
-                <div className="w-full h-full flex items-center justify-center">
+                {record.coverArt ? (
+                    <img
+                        src={record.coverArt}
+                        alt={`${record.albumName} by ${record.artistName}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            target.nextElementSibling?.classList.remove('hidden');
+                        }}
+                    />
+                ) : null}
+                {/* Placeholder image - shown when no cover art or image fails to load */}
+                <div className={`w-full h-full flex items-center justify-center ${record.coverArt ? 'hidden' : ''}`}>
                     <svg className="w-20 h-20 text-midcentury-olive opacity-30" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 48 48">
                         <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="2" fill="none" />
                         <rect x="18" y="18" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />

@@ -13,11 +13,12 @@ export interface VinylRecord {
     artistName: string;
     albumName: string;
     year: number;
-    format: 'Vinyl' | 'CD' | 'Cassette' | 'Digital';
+    format: 'LP' | 'EP' | '7" Single' | '10" Single' | '12" Single' | '10" EP' | '12" EP' | '12" LP';
     genre: string;
     price: number;
     owner: string;
     status: 'Owned' | 'Wanted' | 'Borrowed' | 'Loaned' | 'Re-purchase Necessary';
+    coverArt?: string; // Base64 encoded image
     notes?: string;
     createdAt: Date;
     updatedAt: Date;
