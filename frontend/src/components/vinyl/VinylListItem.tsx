@@ -3,15 +3,11 @@ import { VinylRecord } from '../../types/vinyl';
 
 interface VinylListItemProps {
     record: VinylRecord;
-    isPlaying?: boolean;
-    onPlayClick?: (id: string) => void;
     onEditClick?: (record: VinylRecord) => void;
 }
 
 const VinylListItem: React.FC<VinylListItemProps> = ({
     record,
-    isPlaying = false,
-    onPlayClick,
     onEditClick,
 }) => {
     return (

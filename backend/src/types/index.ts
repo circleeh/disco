@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 // User types
 export interface User {
     id: string;
@@ -41,9 +43,12 @@ export interface VinylFilters {
     page?: number;
     limit?: number;
     artist?: string;
+    albumName?: string;
     genre?: string;
     status?: string;
     owner?: string;
+    notes?: string;
+    year?: number;
     search?: string;
     sortBy?: 'artistName' | 'albumName' | 'year' | 'price';
     sortOrder?: 'asc' | 'desc';

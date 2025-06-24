@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "concurrently \"npm:dev:css\" \"npm:dev:vite\"",
     "dev:vite": "vite",
-    "dev:css": "tailwindcss -i ./src/index.css -o ./src/output.css --watch",
-    "build": "tailwindcss -i ./src/index.css -o ./src/output.css && tsc && vite build",
+    "dev:css": "npx tailwindcss -i ./src/index.css -o ./src/output.css --watch",
+    "build": "npx tailwindcss -i ./src/index.css -o ./src/output.css && tsc && vite build",
     "preview": "vite preview",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,6 +25,7 @@
   "devDependencies": {
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
+    "@tailwindcss/cli": "^4.1.10",
     "@tailwindcss/postcss": "^4.1.10",
     "@types/node": "^24.0.3",
     "@types/react": "^19.1.8",

@@ -1,27 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/layout/Header';
-import { useAuth } from './stores/AuthContext';
 import VinylCollection from './pages/VinylCollection';
-
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-    const { user, loading } = useAuth();
-
-    console.log('🔒 ProtectedRoute check:', { user: !!user, loading });
-
-    if (loading) {
-        console.log('⏳ Loading authentication state...');
-        return <div className="text-center py-8">Loading...</div>;
-    }
-
-    if (!user) {
-        // Do not render a duplicate login message; Header handles login UI
-        return null;
-    }
-
-    console.log('✅ User authenticated, rendering protected content');
-    return <>{children}</>;
-}
 
 function App() {
     console.log('🚀 App component rendering');
