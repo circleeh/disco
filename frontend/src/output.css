@@ -389,6 +389,9 @@
   .flex-col {
     flex-direction: column;
   }
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
   .items-center {
     align-items: center;
   }
@@ -775,6 +778,13 @@
     &:hover {
       @media (hover: hover) {
         background-color: #808000;
+      }
+    }
+  }
+  .hover\:bg-midcentury-walnut {
+    &:hover {
+      @media (hover: hover) {
+        background-color: #5c4033;
       }
     }
   }

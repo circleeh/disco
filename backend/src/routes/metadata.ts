@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getGenres, getArtists, getOwners, getStatuses, searchAlbumMetadata, searchByArtist, getReleaseMetadata, invalidateCache, getCacheStatus } from '../controllers/metadata';
+import { getGenres, getArtists, getOwners, getStatuses, searchAlbumMetadata, searchByArtist, searchByAlbum, searchByArtistAndAlbum, getReleaseMetadata, invalidateCache, getCacheStatus } from '../controllers/metadata';
 import { authenticateToken } from '../middleware/auth';
 
 const router = Router();
@@ -24,6 +24,12 @@ router.get('/search', searchAlbumMetadata);
 
 // GET /api/metadata/artist/:artist - Search by artist name
 router.get('/artist/:artist', searchByArtist);
+
+// GET /api/metadata/album - Search by album name
+router.get('/album', searchByAlbum);
+
+// GET /api/metadata/artist-album - Search by artist and album separately
+router.get('/artist-album', searchByArtistAndAlbum);
 
 // GET /api/metadata/release/:releaseId - Get metadata for specific release
 router.get('/release/:releaseId', getReleaseMetadata);

@@ -136,7 +136,7 @@ Get information about the current authenticated user.
 
 #### GET /api/vinyl
 
-Get all vinyl records with optional filtering and pagination.
+Get all vinyl records with filtering and pagination.
 
 **Headers:**
 
@@ -144,41 +144,44 @@ Get all vinyl records with optional filtering and pagination.
 
 **Query Parameters:**
 
-- `page` (number, optional): Page number (default: 1)
-- `limit` (number, optional): Items per page (default: 20, max: 100)
-- `artist` (string, optional): Filter by artist name
-- `genre` (string, optional): Filter by genre
-- `status` (string, optional): Filter by status
-- `owner` (string, optional): Filter by owner
-- `search` (string, optional): Search in artist name and album name
-- `sortBy` (string, optional): Sort field (artistName, albumName, year, price)
-- `sortOrder` (string, optional): Sort order (asc, desc)
+- `page` (optional): Page number (default: 1)
+- `limit` (optional): Records per page (default: 50)
+- `artist` (optional): Filter by artist name
+- `genre` (optional): Filter by genre
+- `status` (optional): Filter by status
+- `owner` (optional): Filter by owner
+- `search` (optional): Search across artist and album names
+- `sortBy` (optional): Sort field (artistName, albumName, year, price)
+- `sortOrder` (optional): Sort order (asc, desc)
 
 **Response:**
 
 ```json
 {
-  "records": [
-    {
-      "id": "record_id",
-      "artistName": "Pink Floyd",
-      "albumName": "The Dark Side of the Moon",
-      "year": 1973,
-      "format": "Vinyl",
-      "genre": "Rock",
-      "price": 25.99,
-      "owner": "John Doe",
-      "status": "Owned",
-      "notes": "Original pressing",
-      "createdAt": "2024-01-15T10:30:00.000Z",
-      "updatedAt": "2024-01-15T10:30:00.000Z"
+  "success": true,
+  "data": {
+    "records": [
+      {
+        "id": "record_id",
+        "artistName": "Pink Floyd",
+        "albumName": "The Dark Side of the Moon",
+        "year": 1973,
+        "format": "Vinyl",
+        "genre": "Rock",
+        "price": 25.99,
+        "owner": "John Doe",
+        "status": "Owned",
+        "notes": "Original pressing",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T10:30:00.000Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 50,
+      "total": 100,
+      "totalPages": 2
     }
-  ],
-  "pagination": {
-    "page": 1,
-    "limit": 20,
-    "total": 150,
-    "totalPages": 8
   }
 }
 ```
@@ -430,6 +433,200 @@ Get all unique owners.
   "Jane Smith",
   "Bob Johnson"
 ]
+```
+
+#### GET /api/metadata/search
+
+Search for album metadata using a combined query.
+
+**Query Parameters:**
+
+- `query` (required): Search query
+- `limit` (optional): Number of results (default: 5)
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "records": [
+      {
+        "id": "record_id",
+        "artistName": "Pink Floyd",
+        "albumName": "The Dark Side of the Moon",
+        "year": 1973,
+        "format": "Vinyl",
+        "genre": "Rock",
+        "price": 25.99,
+        "owner": "John Doe",
+        "status": "Owned",
+        "notes": "Original pressing",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T10:30:00.000Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 5,
+      "total": 100,
+      "totalPages": 20
+    }
+  }
+}
+```
+
+#### GET /api/metadata/artist/:artist
+
+Search for albums by artist name only.
+
+**Query Parameters:**
+
+- `limit` (optional): Number of results (default: 5)
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "records": [
+      {
+        "id": "record_id",
+        "artistName": "Pink Floyd",
+        "albumName": "The Dark Side of the Moon",
+        "year": 1973,
+        "format": "Vinyl",
+        "genre": "Rock",
+        "price": 25.99,
+        "owner": "John Doe",
+        "status": "Owned",
+        "notes": "Original pressing",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T10:30:00.000Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 5,
+      "total": 100,
+      "totalPages": 20
+    }
+  }
+}
+```
+
+#### GET /api/metadata/album
+
+Search for albums by album name only.
+
+**Query Parameters:**
+
+- `album` (required): Album name to search for
+- `limit` (optional): Number of results (default: 5)
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "records": [
+      {
+        "id": "record_id",
+        "artistName": "Pink Floyd",
+        "albumName": "The Dark Side of the Moon",
+        "year": 1973,
+        "format": "Vinyl",
+        "genre": "Rock",
+        "price": 25.99,
+        "owner": "John Doe",
+        "status": "Owned",
+        "notes": "Original pressing",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T10:30:00.000Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 5,
+      "total": 100,
+      "totalPages": 20
+    }
+  }
+}
+```
+
+#### GET /api/metadata/artist-album
+
+Search for albums using separate artist and album parameters.
+
+**Query Parameters:**
+
+- `artist` (required): Artist name
+- `album` (required): Album name
+- `limit` (optional): Number of results (default: 5)
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "records": [
+      {
+        "id": "record_id",
+        "artistName": "Pink Floyd",
+        "albumName": "The Dark Side of the Moon",
+        "year": 1973,
+        "format": "Vinyl",
+        "genre": "Rock",
+        "price": 25.99,
+        "owner": "John Doe",
+        "status": "Owned",
+        "notes": "Original pressing",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T10:30:00.000Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 5,
+      "total": 100,
+      "totalPages": 20
+    }
+  }
+}
+```
+
+#### GET /api/metadata/release/:releaseId
+
+Get detailed metadata for a specific release.
+
+**Query Parameters:**
+
+- `releaseId` (string, required): Release ID
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "record_id",
+    "artistName": "Pink Floyd",
+    "albumName": "The Dark Side of the Moon",
+    "year": 1973,
+    "format": "Vinyl",
+    "genre": "Rock",
+    "price": 25.99,
+    "owner": "John Doe",
+    "status": "Owned",
+    "notes": "Original pressing",
+    "createdAt": "2024-01-15T10:30:00.000Z",
+    "updatedAt": "2024-01-15T10:30:00.000Z"
+  }
+}
 ```
 
 ## Data Models

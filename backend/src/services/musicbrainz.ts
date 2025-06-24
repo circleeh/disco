@@ -111,6 +111,78 @@ class MusicBrainzService {
     }
 
     /**
+     * Search by album name only
+     */
+    async searchByAlbum(albumName: string, limit: number = 5): Promise<AlbumMetadata[]> {
+        try {
+            console.log('🔍 Searching MusicBrainz by album:', albumName);
+
+            const response = await axios.get(`${this.baseUrl}/release`, {
+                params: {
+                    query: `release:${albumName}`,
+                    fmt: 'json',
+                    limit: limit
+                },
+                headers: {
+                    'User-Agent': 'DiscoVinylApp/1.0'
+                },
+                timeout: 10000
+            });
+
+            const data = response.data as any;
+            const results: AlbumMetadata[] = [];
+
+            for (const release of data.releases || []) {
+                const metadata = this.parseReleaseMetadata(release);
+                if (metadata) {
+                    results.push(metadata);
+                }
+            }
+
+            return results;
+        } catch (error) {
+            console.error('Error searching MusicBrainz by album:', error);
+            return [];
+        }
+    }
+
+    /**
+     * Search with separate artist and album parameters
+     */
+    async searchByArtistAndAlbum(artistName: string, albumName: string, limit: number = 5): Promise<AlbumMetadata[]> {
+        try {
+            console.log('🔍 Searching MusicBrainz by artist and album:', { artistName, albumName });
+
+            const response = await axios.get(`${this.baseUrl}/release`, {
+                params: {
+                    query: `artist:${artistName} AND release:${albumName}`,
+                    fmt: 'json',
+                    limit: limit
+                },
+                headers: {
+                    'User-Agent': 'DiscoVinylApp/1.0'
+                },
+                timeout: 10000
+            });
+
+            const data = response.data as any;
+            const results: AlbumMetadata[] = [];
+
+            for (const release of data.releases || []) {
+                const metadata = this.parseReleaseMetadata(release);
+                if (metadata) {
+                    results.push(metadata);
+                }
+            }
+
+            return results;
+        } catch (error) {
+            console.error('Error searching MusicBrainz by artist and album:', error);
+            return [];
+        }
+    }
+
+    /**
      * Parse release data into our metadata format
      */
     private parseReleaseMetadata(release: MusicBrainzRelease): AlbumMetadata | null {

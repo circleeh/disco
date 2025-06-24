@@ -176,6 +176,117 @@ export const searchByArtist = async (req: Request, res: Response): Promise<void>
     }
 };
 
+// Search by album name
+export const searchByAlbum = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { album, limit = 5 } = req.query;
+
+        if (!album || typeof album !== 'string') {
+            serverErrorResponse(res, 'Album parameter is required');
+            return;
+        }
+
+        console.log('🔍 Searching by album:', album);
+
+        const results = await musicbrainzService.searchByAlbum(album, parseInt(limit as string));
+
+        // For each result, check if cover art exists
+        const resultsWithCoverArt = await Promise.all(
+            results.map(async (metadata) => {
+                if (metadata.coverArtUrl) {
+                    try {
+                        // Download and optimize the cover art
+                        const base64Data = await imageSearchService.downloadImageAsBase64(metadata.coverArtUrl);
+                        const optimizedBase64 = await imageSearchService.optimizeBase64Image(base64Data);
+
+                        return {
+                            ...metadata,
+                            coverArtUrl: optimizedBase64,
+                            hasCoverArt: true
+                        };
+                    } catch (error) {
+                        const { coverArtUrl, ...metadataWithoutCover } = metadata;
+                        return {
+                            ...metadataWithoutCover,
+                            hasCoverArt: false
+                        };
+                    }
+                }
+                return {
+                    ...metadata,
+                    hasCoverArt: false
+                };
+            })
+        );
+
+        successResponse(res, {
+            results: resultsWithCoverArt,
+            total: resultsWithCoverArt.length
+        });
+    } catch (error) {
+        console.error('Error searching by album:', error);
+        serverErrorResponse(res, 'Failed to search by album');
+    }
+};
+
+// Search by artist and album separately
+export const searchByArtistAndAlbum = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { artist, album, limit = 5 } = req.query;
+
+        if (!artist || typeof artist !== 'string') {
+            serverErrorResponse(res, 'Artist parameter is required');
+            return;
+        }
+
+        if (!album || typeof album !== 'string') {
+            serverErrorResponse(res, 'Album parameter is required');
+            return;
+        }
+
+        console.log('🔍 Searching by artist and album:', { artist, album });
+
+        const results = await musicbrainzService.searchByArtistAndAlbum(artist, album, parseInt(limit as string));
+
+        // For each result, check if cover art exists
+        const resultsWithCoverArt = await Promise.all(
+            results.map(async (metadata) => {
+                if (metadata.coverArtUrl) {
+                    try {
+                        // Download and optimize the cover art
+                        const base64Data = await imageSearchService.downloadImageAsBase64(metadata.coverArtUrl);
+                        const optimizedBase64 = await imageSearchService.optimizeBase64Image(base64Data);
+
+                        return {
+                            ...metadata,
+                            coverArtUrl: optimizedBase64,
+                            hasCoverArt: true
+                        };
+                    } catch (error) {
+                        const { coverArtUrl, ...metadataWithoutCover } = metadata;
+                        return {
+                            ...metadataWithoutCover,
+                            hasCoverArt: false
+                        };
+                    }
+                }
+                return {
+                    ...metadata,
+                    hasCoverArt: false
+                };
+            })
+        );
+
+        successResponse(res, {
+            results: resultsWithCoverArt,
+            total: resultsWithCoverArt.length
+        });
+    } catch (error) {
+        console.error('Error searching by artist and album:', error);
+        serverErrorResponse(res, 'Failed to search by artist and album');
+    }
+};
+
 // Get metadata for a specific release
 export const getReleaseMetadata = async (req: Request, res: Response): Promise<void> => {
     try {

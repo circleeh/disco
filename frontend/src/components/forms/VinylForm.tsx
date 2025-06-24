@@ -1,16 +1,7 @@
 import React, { useState } from 'react';
 import ImageSearchModal from '../ui/ImageSearchModal';
-import MetadataSearchModal from '../ui/MetadataSearchModal';
-
-interface AlbumMetadata {
-    artistName: string;
-    albumName: string;
-    year: number;
-    coverArtUrl?: string;
-    label?: string;
-    format?: string;
-    hasCoverArt: boolean;
-}
+import EnhancedMetadataSearchModal from '../ui/EnhancedMetadataSearchModal';
+import { AlbumMetadata } from '../../services/metadata';
 
 interface VinylFormData {
     artistName: string;
@@ -358,7 +349,7 @@ const VinylForm: React.FC<VinylFormProps> = ({ initial, onSubmit, onCancel, load
             />
 
             {/* Metadata Search Modal - Outside the form to prevent form submission */}
-            <MetadataSearchModal
+            <EnhancedMetadataSearchModal
                 isOpen={showMetadataSearch}
                 onClose={() => setShowMetadataSearch(false)}
                 onSelect={handleMetadataSelect}
