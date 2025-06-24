@@ -9,6 +9,17 @@
 
 * **containers:** 💥 Update builds ([35d936e](https://github.com/circleeh/disco/commit/35d936e7567ae59ddd97e143e46fe762d5eeae94))
 
+## [1.2.0](https://github.com/circleeh/disco/compare/v1.1.0...v1.2.0) (2025-06-24)
+
+### Features
+
+* 🔥 remove compiled backend files ([439d5ca](https://github.com/circleeh/disco/commit/439d5ca007a1ee8c7ae61e228e81932f7bf888a3))
+* **auth:** 🏷️  update types for authenticated requests ([a6c66fa](https://github.com/circleeh/disco/commit/a6c66faa488123df764046782a1a5b882bdc0b90))
+
+### Bug Fixes
+
+* **containers:** 💥 Update builds ([35d936e](https://github.com/circleeh/disco/commit/35d936e7567ae59ddd97e143e46fe762d5eeae94))
+
 ## [1.1.0](https://github.com/circleeh/disco/compare/v1.0.0...v1.1.0) (2025-06-24)
 
 ### Features
