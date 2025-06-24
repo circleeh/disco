@@ -88,11 +88,13 @@ export const searchAlbumMetadata = async (req: Request, res: Response): Promise<
             results.map(async (metadata) => {
                 if (metadata.coverArtUrl) {
                     try {
-                        // Test if cover art exists
-                        await imageSearchService.downloadImageAsBase64(metadata.coverArtUrl);
-                        // If successful, return the metadata with cover art URL
+                        // Download and optimize the cover art
+                        const base64Data = await imageSearchService.downloadImageAsBase64(metadata.coverArtUrl);
+                        const optimizedBase64 = await imageSearchService.optimizeBase64Image(base64Data);
+
                         return {
                             ...metadata,
+                            coverArtUrl: optimizedBase64,
                             hasCoverArt: true
                         };
                     } catch (error) {
@@ -140,10 +142,13 @@ export const searchByArtist = async (req: Request, res: Response): Promise<void>
             results.map(async (metadata) => {
                 if (metadata.coverArtUrl) {
                     try {
-                        // Test if cover art exists
-                        await imageSearchService.downloadImageAsBase64(metadata.coverArtUrl);
+                        // Download and optimize the cover art
+                        const base64Data = await imageSearchService.downloadImageAsBase64(metadata.coverArtUrl);
+                        const optimizedBase64 = await imageSearchService.optimizeBase64Image(base64Data);
+
                         return {
                             ...metadata,
+                            coverArtUrl: optimizedBase64,
                             hasCoverArt: true
                         };
                     } catch (error) {
@@ -192,9 +197,12 @@ export const getReleaseMetadata = async (req: Request, res: Response): Promise<v
 
         // Check if cover art exists
         let hasCoverArt = false;
+        let optimizedCoverArt = null;
         if (metadata.coverArtUrl) {
             try {
-                await imageSearchService.downloadImageAsBase64(metadata.coverArtUrl);
+                // Download and optimize the cover art
+                const base64Data = await imageSearchService.downloadImageAsBase64(metadata.coverArtUrl);
+                optimizedCoverArt = await imageSearchService.optimizeBase64Image(base64Data);
                 hasCoverArt = true;
             } catch (error) {
                 const { coverArtUrl, ...metadataWithoutCover } = metadata;
@@ -208,6 +216,7 @@ export const getReleaseMetadata = async (req: Request, res: Response): Promise<v
 
         successResponse(res, {
             ...metadata,
+            coverArtUrl: optimizedCoverArt,
             hasCoverArt
         });
     } catch (error) {
