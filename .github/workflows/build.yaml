@@ -11,11 +11,24 @@ permissions:
   contents: write
 
 jobs:
-  build-and-push-with-buildah:
+  build-backend:
     uses: circleeh/workflows-build-containers/.github/workflows/buildah-ci.yaml@v1
     with:
-      image_description: "Disco - Vinyl Collection"
+      image_description: "Disco - Vinyl Collection - Backend"
       image_authors: "Chris Poupart <chris.poupart@gmail.com>"
-      image_title: ${{ github.event.repository.name }}
+      image_title: ${{ github.event.repository.name }}-backend
+      build_context: ./backend
+      containerfiles: Dockerfile
+    secrets:
+      CALLING_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-frontend:
+    uses: circleeh/workflows-build-containers/.github/workflows/buildah-ci.yaml@v1
+    with:
+      image_description: "Disco - Vinyl Collection - Frontend"
+      image_authors: "Chris Poupart <chris.poupart@gmail.com>"
+      image_title: ${{ github.event.repository.name }}-frontend
+      build_context: ./frontend
+      containerfiles: Dockerfile
     secrets:
       CALLING_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
