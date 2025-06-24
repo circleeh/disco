@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
   release:
     types: [created]
+  workflow_run:
+    workflows: ["Semantic Release"]
+    types: [completed]
 
 permissions:
   packages: write
@@ -17,6 +20,7 @@ jobs:
       image_description: "Disco - Vinyl Collection - Backend"
       image_authors: "Chris Poupart <chris.poupart@gmail.com>"
       image_title: ${{ github.event.repository.name }}-backend
+      image_suffix: "backend"
       build_context: ./backend
       containerfiles: ./backend/Dockerfile
     secrets:
@@ -28,6 +32,7 @@ jobs:
       image_description: "Disco - Vinyl Collection - Frontend"
       image_authors: "Chris Poupart <chris.poupart@gmail.com>"
       image_title: ${{ github.event.repository.name }}-frontend
+      image_suffix: "frontend"
       build_context: ./frontend
       containerfiles: ./frontend/Dockerfile
     secrets:
