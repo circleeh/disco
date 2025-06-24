@@ -106,7 +106,7 @@ const getAuthToken = (req) => {
 };
 exports.getAuthToken = getAuthToken;
 // Google Sheets utilities
-const formatGoogleSheetsRange = (sheetName = 'Vinyl Collection') => {
+const formatGoogleSheetsRange = (sheetName = 'Vinyl_Collection') => {
     return `${sheetName}!A:K`; // A-K covers all our columns
 };
 exports.formatGoogleSheetsRange = formatGoogleSheetsRange;

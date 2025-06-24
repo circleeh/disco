@@ -20,7 +20,11 @@ export const getRecords = async (req: Request, res: Response): Promise<void> => 
 export const getRecordById = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
-        const record = await googleSheetsService.getRecordById(id);
+        const decodedId = decodeURIComponent(id);
+
+        console.log('🔍 Getting record with ID:', { original: id, decoded: decodedId });
+
+        const record = await googleSheetsService.getRecordById(decodedId);
 
         if (!record) {
             notFoundResponse(res, 'Vinyl record not found');
@@ -50,16 +54,28 @@ export const createRecord = async (req: Request, res: Response): Promise<void> =
 // Update an existing vinyl record
 export const updateRecord = async (req: Request, res: Response): Promise<void> => {
     try {
+        console.log('📝 Update record request received:', {
+            method: req.method,
+            path: req.path,
+            params: req.params,
+            body: req.body
+        });
+
         const { id } = req.params;
+        const decodedId = decodeURIComponent(id);
         const updates = req.body;
 
-        const updatedRecord = await googleSheetsService.updateRecord(id, updates);
+        console.log('🔄 Updating record with ID:', { original: id, decoded: decodedId });
+
+        const updatedRecord = await googleSheetsService.updateRecord(decodedId, updates);
 
         if (!updatedRecord) {
+            console.log('❌ Record not found for update');
             notFoundResponse(res, 'Vinyl record not found');
             return;
         }
 
+        console.log('✅ Record updated successfully');
         successResponse(res, updatedRecord);
     } catch (error) {
         console.error('Error updating vinyl record:', error);
@@ -71,7 +87,11 @@ export const updateRecord = async (req: Request, res: Response): Promise<void> =
 export const deleteRecord = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
-        const deleted = await googleSheetsService.deleteRecord(id);
+        const decodedId = decodeURIComponent(id);
+
+        console.log('🗑️ Deleting record with ID:', { original: id, decoded: decodedId });
+
+        const deleted = await googleSheetsService.deleteRecord(decodedId);
 
         if (!deleted) {
             notFoundResponse(res, 'Vinyl record not found');

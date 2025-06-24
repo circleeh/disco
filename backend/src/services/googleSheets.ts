@@ -34,7 +34,7 @@ class GoogleSheetsService {
         const rangesToTry = [
             formatGoogleSheetsRange(),
             formatGoogleSheetsRangeAlternative(),
-            formatGoogleSheetsRangeWithTable('Vinyl Collection'),
+            formatGoogleSheetsRangeWithTable('Vinyl_Collection'),
             'A:K', // Fallback to just column range
         ];
 
@@ -62,10 +62,15 @@ class GoogleSheetsService {
                 }
 
                 // Skip header row and map data
-                let records = rows.slice(1).map((row, index) => ({
-                    id: generateId(),
-                    ...parseGoogleSheetsRow(row),
-                }));
+                let records = rows.slice(1).map((row, index) => {
+                    const parsedRecord = parseGoogleSheetsRow(row);
+                    // Generate a consistent ID based on the record data
+                    const recordId = `${parsedRecord.artistName}-${parsedRecord.albumName}-${parsedRecord.year}`;
+                    return {
+                        id: recordId,
+                        ...parsedRecord,
+                    };
+                });
 
                 console.log('📝 Parsed records:', records.length);
 
@@ -106,227 +111,415 @@ class GoogleSheetsService {
 
     // Get a single record by ID (using row index)
     async getRecordById(id: string): Promise<VinylRecord | null> {
-        try {
-            const range = formatGoogleSheetsRange();
-            const response = await this.sheets.spreadsheets.values.get({
-                spreadsheetId: this.spreadsheetId,
-                range,
-            });
+        // Try multiple range formats like in getRecords
+        const rangeFormats = [
+            "'Vinyl Collection'!A:K",  // Quoted sheet name with spaces
+            "Vinyl Collection!A:K",    // Unquoted sheet name with spaces
+            "'Vinyl_Collection'!A:K",  // Quoted sheet name with underscore
+            "Vinyl_Collection!A:K",    // Unquoted sheet name with underscore
+            "Sheet1!A:K",             // Common default sheet name
+            "A:K",                    // Just column range (default sheet)
+        ];
 
-            const rows = response.data.values || [];
-            const recordIndex = rows.findIndex((row, index) => {
-                if (index === 0) return false; // Skip header
-                const record = parseGoogleSheetsRow(row);
-                return record.artistName + record.albumName + record.year === id;
-            });
+        for (const range of rangeFormats) {
+            try {
+                console.log(`🔄 Trying to get record by ID with range: "${range}"`);
 
-            if (recordIndex === -1) return null;
+                const response = await this.sheets.spreadsheets.values.get({
+                    spreadsheetId: this.spreadsheetId,
+                    range,
+                });
 
-            const row = rows[recordIndex];
-            return {
-                id,
-                ...parseGoogleSheetsRow(row),
-            };
-        } catch (error) {
-            console.error('Error fetching record from Google Sheets:', error);
-            throw new Error('Failed to fetch record');
+                const rows = response.data.values || [];
+
+                // If no data, try next range
+                if (rows.length === 0) {
+                    console.log('📭 No data found with range:', range);
+                    continue;
+                }
+
+                const recordIndex = rows.findIndex((row, index) => {
+                    if (index === 0) return false; // Skip header
+                    const record = parseGoogleSheetsRow(row);
+                    // Use the same ID generation logic as getRecords
+                    const recordId = `${record.artistName}-${record.albumName}-${record.year}`;
+                    return recordId === id;
+                });
+
+                if (recordIndex === -1) {
+                    console.log('❌ Record not found with range:', range);
+                    continue;
+                }
+
+                const row = rows[recordIndex];
+                console.log('✅ Successfully found record with range:', range);
+                return {
+                    id,
+                    ...parseGoogleSheetsRow(row),
+                };
+            } catch (error) {
+                console.log(`❌ Failed to get record by ID with range "${range}":`, (error as Error).message);
+                // Continue to next range
+                continue;
+            }
         }
+
+        // If all ranges failed, return null
+        console.log('❌ All Google Sheets ranges failed for getRecordById');
+        return null;
     }
 
     // Create a new record
     async createRecord(record: Omit<VinylRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<VinylRecord> {
-        try {
-            const newRecord: VinylRecord = {
-                ...record,
-                id: generateId(),
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
+        // Try multiple range formats like in getRecords
+        const rangeFormats = [
+            "'Vinyl Collection'!A:K",  // Quoted sheet name with spaces
+            "Vinyl Collection!A:K",    // Unquoted sheet name with spaces
+            "'Vinyl_Collection'!A:K",  // Quoted sheet name with underscore
+            "Vinyl_Collection!A:K",    // Unquoted sheet name with underscore
+            "Sheet1!A:K",             // Common default sheet name
+            "A:K",                    // Just column range (default sheet)
+        ];
 
-            const row = formatGoogleSheetsRowData(newRecord);
+        for (const range of rangeFormats) {
+            try {
+                console.log(`🔄 Trying to create record with range: "${range}"`);
 
-            await this.sheets.spreadsheets.values.append({
-                spreadsheetId: this.spreadsheetId,
-                range: formatGoogleSheetsRange(),
-                valueInputOption: 'RAW',
-                requestBody: {
-                    values: [row],
-                },
-            });
+                const newRecord: VinylRecord = {
+                    ...record,
+                    id: `${record.artistName}-${record.albumName}-${record.year}`,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                };
 
-            return newRecord;
-        } catch (error) {
-            console.error('Error creating record in Google Sheets:', error);
-            throw new Error('Failed to create record');
+                const row = formatGoogleSheetsRowData(newRecord);
+
+                await this.sheets.spreadsheets.values.append({
+                    spreadsheetId: this.spreadsheetId,
+                    range,
+                    valueInputOption: 'RAW',
+                    requestBody: {
+                        values: [row],
+                    },
+                });
+
+                console.log('✅ Successfully created record with range:', range);
+                return newRecord;
+            } catch (error) {
+                console.log(`❌ Failed to create record with range "${range}": `, (error as Error).message);
+                // Continue to next range
+                continue;
+            }
         }
+
+        // If all ranges failed, throw error
+        console.error('❌ All Google Sheets ranges failed for create');
+        throw new Error('Failed to create record from any range');
     }
 
     // Update an existing record
     async updateRecord(id: string, updates: Partial<VinylRecord>): Promise<VinylRecord | null> {
-        try {
-            const range = formatGoogleSheetsRange();
-            const response = await this.sheets.spreadsheets.values.get({
-                spreadsheetId: this.spreadsheetId,
-                range,
-            });
+        // Try multiple range formats like in getRecords
+        const rangeFormats = [
+            "'Vinyl Collection'!A:K",  // Quoted sheet name with spaces
+            "Vinyl Collection!A:K",    // Unquoted sheet name with spaces
+            "'Vinyl_Collection'!A:K",  // Quoted sheet name with underscore
+            "Vinyl_Collection!A:K",    // Unquoted sheet name with underscore
+            "Sheet1!A:K",             // Common default sheet name
+            "A:K",                    // Just column range (default sheet)
+        ];
 
-            const rows = response.data.values || [];
-            const recordIndex = rows.findIndex((row, index) => {
-                if (index === 0) return false; // Skip header
-                const record = parseGoogleSheetsRow(row);
-                return record.artistName + record.albumName + record.year === id;
-            });
+        for (const range of rangeFormats) {
+            try {
+                console.log(`🔄 Trying to update record with range: "${range}"`);
 
-            if (recordIndex === -1) return null;
+                const response = await this.sheets.spreadsheets.values.get({
+                    spreadsheetId: this.spreadsheetId,
+                    range,
+                });
 
-            const existingRecord = parseGoogleSheetsRow(rows[recordIndex]);
-            const updatedRecord = {
-                ...existingRecord,
-                ...updates,
-                id,
-                updatedAt: new Date(),
-            };
+                const rows = response.data.values || [];
 
-            const row = formatGoogleSheetsRowData(updatedRecord);
+                // If no data, try next range
+                if (rows.length === 0) {
+                    console.log('📭 No data found with range:', range);
+                    continue;
+                }
 
-            await this.sheets.spreadsheets.values.update({
-                spreadsheetId: this.spreadsheetId,
-                range: `${formatGoogleSheetsRange().split('!')[0]}!A${recordIndex + 1}:K${recordIndex + 1}`,
-                valueInputOption: 'RAW',
-                requestBody: {
-                    values: [row],
-                },
-            });
+                const recordIndex = rows.findIndex((row, index) => {
+                    if (index === 0) return false; // Skip header
+                    const record = parseGoogleSheetsRow(row);
+                    // Use the same ID generation logic as getRecords
+                    const recordId = `${record.artistName}-${record.albumName}-${record.year}`;
+                    return recordId === id;
+                });
 
-            return updatedRecord as VinylRecord;
-        } catch (error) {
-            console.error('Error updating record in Google Sheets:', error);
-            throw new Error('Failed to update record');
+                if (recordIndex === -1) {
+                    console.log('❌ Record not found with range:', range);
+                    continue;
+                }
+
+                const existingRecord = parseGoogleSheetsRow(rows[recordIndex]);
+                const updatedRecord = {
+                    ...existingRecord,
+                    ...updates,
+                    id,
+                    updatedAt: new Date(),
+                };
+
+                const row = formatGoogleSheetsRowData(updatedRecord);
+
+                // Try multiple sheet names for the update operation
+                const sheetNames = ['Sheet1', 'Vinyl Collection', 'Vinyl_Collection'];
+                let updateSuccess = false;
+
+                for (const sheetName of sheetNames) {
+                    try {
+                        const updateRange = `${sheetName}!A${recordIndex + 1}:K${recordIndex + 1}`;
+                        console.log(`📝 Trying update range: ${updateRange} (from read range: ${range})`);
+
+                        await this.sheets.spreadsheets.values.update({
+                            spreadsheetId: this.spreadsheetId,
+                            range: updateRange,
+                            valueInputOption: 'RAW',
+                            requestBody: {
+                                values: [row],
+                            },
+                        });
+
+                        console.log('✅ Successfully updated record with sheet:', sheetName);
+                        updateSuccess = true;
+                        break;
+                    } catch (updateError) {
+                        console.log(`❌ Failed to update with sheet "${sheetName}":`, (updateError as Error).message);
+                        // Continue to next sheet name
+                        continue;
+                    }
+                }
+
+                if (!updateSuccess) {
+                    throw new Error('Failed to update record with any sheet name');
+                }
+
+                console.log('✅ Successfully updated record with range:', range);
+                return updatedRecord as VinylRecord;
+            } catch (error) {
+                console.log(`❌ Failed to update record with range "${range}": `, (error as Error).message);
+                // Continue to next range
+                continue;
+            }
         }
+
+        // If all ranges failed, throw error
+        console.error('❌ All Google Sheets ranges failed for update');
+        throw new Error('Failed to update record from any range');
     }
 
     // Delete a record
     async deleteRecord(id: string): Promise<boolean> {
-        try {
-            const range = formatGoogleSheetsRange();
-            const response = await this.sheets.spreadsheets.values.get({
-                spreadsheetId: this.spreadsheetId,
-                range,
-            });
+        // Try multiple range formats like in getRecords
+        const rangeFormats = [
+            "'Vinyl Collection'!A:K",  // Quoted sheet name with spaces
+            "Vinyl Collection!A:K",    // Unquoted sheet name with spaces
+            "'Vinyl_Collection'!A:K",  // Quoted sheet name with underscore
+            "Vinyl_Collection!A:K",    // Unquoted sheet name with underscore
+            "Sheet1!A:K",             // Common default sheet name
+            "A:K",                    // Just column range (default sheet)
+        ];
 
-            const rows = response.data.values || [];
-            const recordIndex = rows.findIndex((row, index) => {
-                if (index === 0) return false; // Skip header
-                const record = parseGoogleSheetsRow(row);
-                return record.artistName + record.albumName + record.year === id;
-            });
+        for (const range of rangeFormats) {
+            try {
+                console.log(`🔄 Trying to delete record with range: "${range}"`);
 
-            if (recordIndex === -1) return false;
+                const response = await this.sheets.spreadsheets.values.get({
+                    spreadsheetId: this.spreadsheetId,
+                    range,
+                });
 
-            // Delete the row
-            await this.sheets.spreadsheets.batchUpdate({
-                spreadsheetId: this.spreadsheetId,
-                requestBody: {
-                    requests: [
-                        {
-                            deleteDimension: {
-                                range: {
-                                    sheetId: 0, // Assuming first sheet
-                                    dimension: 'ROWS',
-                                    startIndex: recordIndex,
-                                    endIndex: recordIndex + 1,
+                const rows = response.data.values || [];
+
+                // If no data, try next range
+                if (rows.length === 0) {
+                    console.log('📭 No data found with range:', range);
+                    continue;
+                }
+
+                const recordIndex = rows.findIndex((row, index) => {
+                    if (index === 0) return false; // Skip header
+                    const record = parseGoogleSheetsRow(row);
+                    // Use the same ID generation logic as getRecords
+                    const recordId = `${record.artistName}-${record.albumName}-${record.year}`;
+                    return recordId === id;
+                });
+
+                if (recordIndex === -1) {
+                    console.log('❌ Record not found with range:', range);
+                    continue;
+                }
+
+                // Delete the row
+                await this.sheets.spreadsheets.batchUpdate({
+                    spreadsheetId: this.spreadsheetId,
+                    requestBody: {
+                        requests: [
+                            {
+                                deleteDimension: {
+                                    range: {
+                                        sheetId: 0, // Assuming first sheet
+                                        dimension: 'ROWS',
+                                        startIndex: recordIndex,
+                                        endIndex: recordIndex + 1,
+                                    },
                                 },
                             },
-                        },
-                    ],
-                },
-            });
+                        ],
+                    },
+                });
 
-            return true;
-        } catch (error) {
-            console.error('Error deleting record from Google Sheets:', error);
-            throw new Error('Failed to delete record');
+                console.log('✅ Successfully deleted record with range:', range);
+                return true;
+            } catch (error) {
+                console.log(`❌ Failed to delete record with range "${range}": `, (error as Error).message);
+                // Continue to next range
+                continue;
+            }
         }
+
+        // If all ranges failed, throw error
+        console.error('❌ All Google Sheets ranges failed for delete');
+        throw new Error('Failed to delete record from any range');
     }
 
     // Get collection statistics
     async getStats(): Promise<VinylStats> {
-        try {
-            const range = formatGoogleSheetsRange();
-            const response = await this.sheets.spreadsheets.values.get({
-                spreadsheetId: this.spreadsheetId,
-                range,
-            });
+        // Try multiple range formats like in getRecords
+        const rangeFormats = [
+            "'Vinyl Collection'!A:K",  // Quoted sheet name with spaces
+            "Vinyl Collection!A:K",    // Unquoted sheet name with spaces
+            "'Vinyl_Collection'!A:K",  // Quoted sheet name with underscore
+            "Vinyl_Collection!A:K",    // Unquoted sheet name with underscore
+            "Sheet1!A:K",             // Common default sheet name
+            "A:K",                    // Just column range (default sheet)
+        ];
 
-            const rows = response.data.values || [];
-            const records = rows.slice(1).map(row => parseGoogleSheetsRow(row));
+        for (const range of rangeFormats) {
+            try {
+                console.log(`🔄 Trying to get stats with range: "${range}"`);
 
-            const totalRecords = records.length;
-            const totalValue = records.reduce((sum, record) => sum + (record.price || 0), 0);
-            const averagePrice = totalRecords > 0 ? totalValue / totalRecords : 0;
+                const response = await this.sheets.spreadsheets.values.get({
+                    spreadsheetId: this.spreadsheetId,
+                    range,
+                });
 
-            // Group by status
-            const byStatus: Record<string, number> = {};
-            records.forEach(record => {
-                byStatus[record.status] = (byStatus[record.status] || 0) + 1;
-            });
+                const rows = response.data.values || [];
 
-            // Group by format
-            const byFormat: Record<string, number> = {};
-            records.forEach(record => {
-                byFormat[record.format] = (byFormat[record.format] || 0) + 1;
-            });
+                // If no data, try next range
+                if (rows.length === 0) {
+                    console.log('📭 No data found with range:', range);
+                    continue;
+                }
 
-            // Group by genre
-            const byGenre: Record<string, number> = {};
-            records.forEach(record => {
-                byGenre[record.genre] = (byGenre[record.genre] || 0) + 1;
-            });
+                const records = rows.slice(1).map(row => parseGoogleSheetsRow(row));
 
-            // Find most expensive record
-            const mostExpensive = records.reduce((max, record) =>
-                (record.price || 0) > (max.price || 0) ? record : max,
-                { price: 0, artistName: '', albumName: '', id: '' }
-            );
+                const totalRecords = records.length;
+                const totalValue = records.reduce((sum, record) => sum + (record.price || 0), 0);
+                const averagePrice = totalRecords > 0 ? totalValue / totalRecords : 0;
 
-            return {
-                totalRecords,
-                totalValue,
-                byStatus,
-                byFormat,
-                byGenre,
-                averagePrice,
-                mostExpensive: {
-                    id: mostExpensive.id || '',
-                    artistName: mostExpensive.artistName || '',
-                    albumName: mostExpensive.albumName || '',
-                    price: mostExpensive.price || 0,
-                },
-            };
-        } catch (error) {
-            console.error('Error fetching stats from Google Sheets:', error);
-            throw new Error('Failed to fetch statistics');
+                // Group by status
+                const byStatus: Record<string, number> = {};
+                records.forEach(record => {
+                    byStatus[record.status] = (byStatus[record.status] || 0) + 1;
+                });
+
+                // Group by format
+                const byFormat: Record<string, number> = {};
+                records.forEach(record => {
+                    byFormat[record.format] = (byFormat[record.format] || 0) + 1;
+                });
+
+                // Group by genre
+                const byGenre: Record<string, number> = {};
+                records.forEach(record => {
+                    byGenre[record.genre] = (byGenre[record.genre] || 0) + 1;
+                });
+
+                // Find most expensive record
+                const mostExpensive = records.reduce((max, record) =>
+                    (record.price || 0) > (max.price || 0) ? record : max,
+                    { price: 0, artistName: '', albumName: '', id: '' }
+                );
+
+                console.log('✅ Successfully got stats with range:', range);
+                return {
+                    totalRecords,
+                    totalValue,
+                    byStatus,
+                    byFormat,
+                    byGenre,
+                    averagePrice,
+                    mostExpensive: {
+                        id: mostExpensive.id || '',
+                        artistName: mostExpensive.artistName || '',
+                        albumName: mostExpensive.albumName || '',
+                        price: mostExpensive.price || 0,
+                    },
+                };
+            } catch (error) {
+                console.log(`❌ Failed to get stats with range "${range}": `, (error as Error).message);
+                // Continue to next range
+                continue;
+            }
         }
+
+        // If all ranges failed, throw error
+        console.error('❌ All Google Sheets ranges failed for getStats');
+        throw new Error('Failed to fetch statistics from any range');
     }
 
     // Get unique values for dropdowns
     async getUniqueValues(field: 'artistName' | 'genre' | 'owner'): Promise<string[]> {
-        try {
-            const range = formatGoogleSheetsRange();
-            const response = await this.sheets.spreadsheets.values.get({
-                spreadsheetId: this.spreadsheetId,
-                range,
-            });
+        // Try multiple range formats like in getRecords
+        const rangeFormats = [
+            "'Vinyl Collection'!A:K",  // Quoted sheet name with spaces
+            "Vinyl Collection!A:K",    // Unquoted sheet name with spaces
+            "'Vinyl_Collection'!A:K",  // Quoted sheet name with underscore
+            "Vinyl_Collection!A:K",    // Unquoted sheet name with underscore
+            "Sheet1!A:K",             // Common default sheet name
+            "A:K",                    // Just column range (default sheet)
+        ];
 
-            const rows = response.data.values || [];
-            const records = rows.slice(1).map(row => parseGoogleSheetsRow(row));
+        for (const range of rangeFormats) {
+            try {
+                console.log(`🔄 Trying to get unique values for ${field} with range: "${range}"`);
 
-            const uniqueValues = [...new Set(records.map(record => record[field]).filter(Boolean))];
-            return uniqueValues.sort();
-        } catch (error) {
-            console.error(`Error fetching unique ${field} values from Google Sheets:`, error);
-            throw new Error(`Failed to fetch unique ${field} values`);
+                const response = await this.sheets.spreadsheets.values.get({
+                    spreadsheetId: this.spreadsheetId,
+                    range,
+                });
+
+                const rows = response.data.values || [];
+
+                // If no data, try next range
+                if (rows.length === 0) {
+                    console.log('📭 No data found with range:', range);
+                    continue;
+                }
+
+                const records = rows.slice(1).map(row => parseGoogleSheetsRow(row));
+                const uniqueValues = [...new Set(records.map(record => record[field]).filter(Boolean))];
+
+                console.log('✅ Successfully got unique values with range:', range);
+                return uniqueValues.sort();
+            } catch (error) {
+                console.log(`❌ Failed to get unique values with range "${range}": `, (error as Error).message);
+                // Continue to next range
+                continue;
+            }
         }
+
+        // If all ranges failed, throw error
+        console.error('❌ All Google Sheets ranges failed for getUniqueValues');
+        throw new Error(`Failed to fetch unique ${field} values from any range`);
     }
 
     // Private helper methods
@@ -346,7 +539,7 @@ class GoogleSheetsService {
             }
             if (filters.search) {
                 const searchTerm = filters.search.toLowerCase();
-                const searchableText = `${record.artistName} ${record.albumName}`.toLowerCase();
+                const searchableText = `${record.artistName} ${record.albumName} `.toLowerCase();
                 if (!searchableText.includes(searchTerm)) {
                     return false;
                 }

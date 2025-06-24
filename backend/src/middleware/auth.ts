@@ -9,9 +9,12 @@ interface AuthenticatedRequest extends Request {
 
 // Middleware to authenticate JWT tokens
 export const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+    console.log('🔐 Authenticating request:', req.method, req.path);
+
     const token = getAuthToken(req);
 
     if (!token) {
+        console.log('❌ No token provided');
         unauthorizedResponse(res, 'Access token required');
         return;
     }
@@ -19,8 +22,10 @@ export const authenticateToken = (req: AuthenticatedRequest, res: Response, next
     try {
         const decoded = verifyToken(token);
         req.user = decoded as User;
+        console.log('✅ Authentication successful for user:', decoded.email);
         next();
     } catch (error) {
+        console.log('❌ Authentication failed:', error);
         unauthorizedResponse(res, 'Invalid or expired token');
     }
 };

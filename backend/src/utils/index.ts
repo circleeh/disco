@@ -105,14 +105,22 @@ export const getAuthToken = (req: Request): string | null => {
 };
 
 // Google Sheets utilities
-export const formatGoogleSheetsRange = (sheetName: string = 'Vinyl Collection'): string => {
-    // Properly quote sheet names with spaces and handle table ranges
-    const quotedSheetName = `'${sheetName}'`;
-    return `${quotedSheetName}!A:K`; // A-K covers all our columns
+export const formatGoogleSheetsRange = (sheetName: string = 'Vinyl_Collection'): string => {
+    // Try different formats for sheet names with spaces
+    const ranges = [
+        `'${sheetName}'!A:K`, // Quoted sheet name with column range
+        `${sheetName}!A:K`,   // Unquoted sheet name with column range
+        'A:K',                // Just column range (default sheet)
+        'Sheet1!A:K',         // Common default sheet name
+        'Sheet1',             // Just the sheet name
+        sheetName,            // Just the provided sheet name
+    ];
+
+    return ranges[0]; // Return the first format, the service will try others if this fails
 };
 
 // Alternative range formats for different sheet structures
-export const formatGoogleSheetsRangeAlternative = (sheetName: string = 'Vinyl Collection'): string => {
+export const formatGoogleSheetsRangeAlternative = (sheetName: string = 'Vinyl_Collection'): string => {
     // For tables, sometimes you need to use the table name instead of cell range
     // This is a fallback option
     return `${sheetName}`; // Just the sheet name, let Google Sheets figure out the range
@@ -124,13 +132,30 @@ export const formatGoogleSheetsRangeWithTable = (tableName: string): string => {
 };
 
 export const parseGoogleSheetsRow = (row: any[]): any => {
+    // Parse price with improved handling
+    const rawPrice = row[5];
+    let parsedPrice = 0;
+
+    if (rawPrice !== null && rawPrice !== undefined && rawPrice !== '') {
+        // Try to parse as number, handling various formats
+        const priceStr = rawPrice.toString().trim();
+
+        // Remove currency symbols and commas
+        const cleanPrice = priceStr.replace(/[$€£¥,]/g, '');
+
+        const numPrice = parseFloat(cleanPrice);
+        if (!isNaN(numPrice)) {
+            parsedPrice = numPrice;
+        }
+    }
+
     return {
         artistName: row[0] || '',
         albumName: row[1] || '',
         year: row[2] ? parseInt(row[2].toString(), 10) || 0 : 0,
         format: row[3] || 'Vinyl',
         genre: row[4] || '',
-        price: row[5] ? parseFloat(row[5].toString()) || 0 : 0,
+        price: parsedPrice,
         owner: row[6] || '',
         status: row[7] || 'Owned',
         notes: row[8] || '',
