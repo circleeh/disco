@@ -194,7 +194,8 @@ lsof -i :5000
 kill -9 <PID>
 ```
 
-**Environment variables not loaded**
+##### Environment variables not loaded
+
 ```bash
 # Check if .env file exists
 ls -la backend/.env
@@ -203,7 +204,8 @@ ls -la backend/.env
 cd backend && node -e "require('dotenv').config(); console.log(process.env.GOOGLE_CLIENT_ID)"
 ```
 
-**CORS issues**
+##### CORS issues
+
 - Ensure `FRONTEND_URL` is set correctly in backend `.env`
 - Check that frontend is running on port 3000
 - Verify proxy configuration in `vite.config.ts`
