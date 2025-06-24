@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { searchAlbumCovers, downloadImageAsBase64, ImageSearchResult } from '../../services/imageSearch';
 
 interface ImageSearchModalProps {
@@ -21,15 +21,36 @@ const ImageSearchModal: React.FC<ImageSearchModalProps> = ({
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [downloading, setDownloading] = useState(false);
 
+    // Debounced search function
+    const debouncedSearch = useCallback(
+        (() => {
+            let timeoutId: NodeJS.Timeout;
+            return (searchTerm: string) => {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    if (searchTerm.trim()) {
+                        handleSearch(searchTerm);
+                    }
+                }, 500);
+            };
+        })(),
+        []
+    );
+
+    // Only set initial query when modal opens, don't auto-search
     useEffect(() => {
-        if (isOpen && searchQuery) {
+        if (isOpen) {
             setQuery(searchQuery);
-            handleSearch(searchQuery);
+            setResults([]);
+            setError(null);
         }
     }, [isOpen, searchQuery]);
 
     const handleSearch = async (searchTerm: string) => {
-        if (!searchTerm.trim()) return;
+        if (!searchTerm.trim()) {
+            setResults([]);
+            return;
+        }
 
         setLoading(true);
         setError(null);
@@ -42,6 +63,7 @@ const ImageSearchModal: React.FC<ImageSearchModalProps> = ({
             console.error('❌ Image search error:', err);
             const errorMessage = err.response?.data?.message || err.message || 'Failed to search for images';
             setError(`Search failed: ${errorMessage}`);
+            setResults([]);
         } finally {
             setLoading(false);
         }
@@ -67,6 +89,21 @@ const ImageSearchModal: React.FC<ImageSearchModalProps> = ({
         handleSearch(query);
     };
 
+    const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newQuery = e.target.value;
+        setQuery(newQuery);
+        debouncedSearch(newQuery);
+    };
+
+    const handleClose = () => {
+        setQuery('');
+        setResults([]);
+        setError(null);
+        setSelectedImage(null);
+        setDownloading(false);
+        onClose();
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -75,7 +112,7 @@ const ImageSearchModal: React.FC<ImageSearchModalProps> = ({
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-bold text-midcentury-charcoal">Search Album Covers</h2>
                     <button
-                        onClick={onClose}
+                        onClick={handleClose}
                         className="text-midcentury-charcoal hover:text-midcentury-burntOrange"
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,7 +122,7 @@ const ImageSearchModal: React.FC<ImageSearchModalProps> = ({
                 </div>
 
                 <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded text-blue-800 text-sm">
-                    <p><strong>Note:</strong> We search for album cover artwork using multiple sources. For popular albums, we may find actual covers. For others, we provide music-themed alternatives.</p>
+                    <p><strong>Note:</strong> We search for album cover artwork using MusicBrainz. Type to search automatically, or click the search button.</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="mb-4">
@@ -93,8 +130,8 @@ const ImageSearchModal: React.FC<ImageSearchModalProps> = ({
                         <input
                             type="text"
                             value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            placeholder="Search for album covers (e.g., 'Pink Floyd Dark Side')"
+                            onChange={handleQueryChange}
+                            placeholder="Search for album covers (e.g., 'Kraftwerk Autobahn')"
                             className="flex-1 px-3 py-2 border border-midcentury-walnut rounded focus:ring-1 focus:ring-midcentury-mustard focus:border-midcentury-mustard"
                         />
                         <button
@@ -135,9 +172,14 @@ const ImageSearchModal: React.FC<ImageSearchModalProps> = ({
                                             className="w-full h-full object-cover"
                                             onError={(e) => {
                                                 const target = e.target as HTMLImageElement;
-                                                target.src = 'https://via.placeholder.com/300x300/cccccc/666666?text=No+Image';
+                                                target.style.display = 'none';
+                                                target.nextElementSibling?.classList.remove('hidden');
                                             }}
                                         />
+                                        {/* Fallback placeholder */}
+                                        <div className="hidden w-full h-full flex items-center justify-center bg-midcentury-cream">
+                                            <span className="text-xs text-midcentury-olive text-center">No Image</span>
+                                        </div>
                                     </div>
                                     <p className="text-xs text-midcentury-charcoal mt-1 truncate">
                                         {result.title}
@@ -156,7 +198,7 @@ const ImageSearchModal: React.FC<ImageSearchModalProps> = ({
                         </div>
                     ) : (
                         <div className="text-center py-8 text-midcentury-charcoal">
-                            Enter an album name and click search to find cover art
+                            Enter an album name to search for cover art
                         </div>
                     )}
                 </div>

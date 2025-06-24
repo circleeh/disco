@@ -28,16 +28,12 @@ class ImageSearchService {
             console.log('🔍 Searching MusicBrainz for album covers:', query);
             const results = await this.searchMusicBrainz(query, limit);
 
-            // If we don't have enough results, generate intelligent placeholders
-            if (results.length < limit) {
-                const placeholderResults = this.generateIntelligentPlaceholders(query, limit - results.length);
-                results.push(...placeholderResults);
-            }
-
+            // Only return real results, no placeholders
             return results.slice(0, limit);
         } catch (error) {
             console.error('Error searching for album covers:', error);
-            return this.fallbackSearch(query, limit);
+            // Return empty array instead of fallback placeholders
+            return [];
         }
     }
 
@@ -127,67 +123,10 @@ class ImageSearchService {
     }
 
     /**
-     * Generate intelligent placeholder images when no real covers are found
-     */
-    private generateIntelligentPlaceholders(query: string, count: number): ImageSearchResult[] {
-        const results: ImageSearchResult[] = [];
-        const artist = query.split(' ')[0] || 'Unknown';
-
-        for (let i = 0; i < count; i++) {
-            const theme = this.getAlbumTheme(artist, query, i);
-            const color = this.getRandomColor();
-            const placeholderUrl = `https://via.placeholder.com/300x300/${color}/ffffff?text=${encodeURIComponent(theme)}`;
-
-            results.push({
-                url: placeholderUrl,
-                title: `${query} - ${theme}`,
-                width: 300,
-                height: 300
-            });
-        }
-
-        return results;
-    }
-
-    private getAlbumTheme(artist: string, album: string, index: number): string {
-        const themes = [
-            'Album Cover',
-            'Vinyl Record',
-            'Music Note',
-            'Artist Portrait',
-            'Sound Wave',
-            'Microphone',
-            'Guitar',
-            'Drum Set',
-            'Piano Keys',
-            'Headphones'
-        ];
-        return themes[index % themes.length];
-    }
-
-    private getRandomColor(): string {
-        const colors = ['FF6B6B', '4ECDC4', '45B7D1', '96CEB4', 'FFEAA7', 'DDA0DD', '98D8C8', 'F7DC6F', 'BB8FCE', '85C1E9'];
-        return colors[Math.floor(Math.random() * colors.length)];
-    }
-
-    /**
-     * Fallback search when all else fails
-     */
-    private async fallbackSearch(query: string, limit: number): Promise<ImageSearchResult[]> {
-        console.log('🔄 Using fallback search for:', query);
-        return this.generateIntelligentPlaceholders(query, limit);
-    }
-
-    /**
      * Download image and convert to base64
      */
     async downloadImageAsBase64(imageUrl: string): Promise<string> {
         try {
-            // Check if it's a placeholder URL
-            if (imageUrl.includes('via.placeholder.com')) {
-                return this.convertPlaceholderToBase64(imageUrl);
-            }
-
             const response = await axios.get(imageUrl, {
                 responseType: 'arraybuffer',
                 timeout: 10000,
@@ -203,27 +142,20 @@ class ImageSearchService {
         } catch (error) {
             console.error('Error downloading image:', error);
             // Return a simple colored square as fallback
-            return this.convertPlaceholderToBase64(imageUrl);
+            return this.generateSimpleFallbackImage();
         }
     }
 
     /**
-     * Convert placeholder URL to base64 SVG
+     * Generate a simple fallback image when download fails
      */
-    private convertPlaceholderToBase64(placeholderUrl: string): string {
-        // Extract color and text from placeholder URL
-        const colorMatch = placeholderUrl.match(/\/[0-9A-F]{6}\//);
-        const textMatch = placeholderUrl.match(/text=([^&]+)/);
-
-        const color = colorMatch ? colorMatch[0].replace(/\//g, '') : 'CCCCCC';
-        const text = textMatch ? decodeURIComponent(textMatch[1]) : 'Album Cover';
-
+    private generateSimpleFallbackImage(): string {
         const svg = `
             <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-                <rect width="200" height="200" fill="#${color}"/>
+                <rect width="200" height="200" fill="#cccccc"/>
                 <text x="100" y="100" font-family="Arial, sans-serif" font-size="12"
                       fill="white" text-anchor="middle" dominant-baseline="middle">
-                    ${text}
+                    No Image
                 </text>
             </svg>
         `.trim();

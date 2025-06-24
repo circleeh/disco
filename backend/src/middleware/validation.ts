@@ -100,6 +100,7 @@ export const validateVinylUpdate = validate(
         price: Joi.number().min(0).precision(2).optional(),
         owner: Joi.string().min(1).max(100).optional(),
         status: Joi.string().valid('Owned', 'Wanted', 'Borrowed', 'Loaned', 'Re-purchase Necessary').optional(),
+        coverArt: Joi.string().max(1000000).allow('').optional(), // Base64 encoded image, max ~750KB
         notes: Joi.string().max(1000).allow('').optional(),
     })
 );

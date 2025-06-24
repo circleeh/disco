@@ -317,12 +317,12 @@ class GoogleSheetsService {
     async getRecordById(id: string): Promise<VinylRecord | null> {
         // Try multiple range formats like in getRecords
         const rangeFormats = [
-            "'Vinyl Collection'!A:K",  // Quoted sheet name with spaces
-            "Vinyl Collection!A:K",    // Unquoted sheet name with spaces
-            "'Vinyl_Collection'!A:K",  // Quoted sheet name with underscore
-            "Vinyl_Collection!A:K",    // Unquoted sheet name with underscore
-            "Sheet1!A:K",             // Common default sheet name
-            "A:K",                    // Just column range (default sheet)
+            "'Vinyl Collection'!A:L",  // Quoted sheet name with spaces
+            "Vinyl Collection!A:L",    // Unquoted sheet name with spaces
+            "'Vinyl_Collection'!A:L",  // Quoted sheet name with underscore
+            "Vinyl_Collection!A:L",    // Unquoted sheet name with underscore
+            "Sheet1!A:L",             // Common default sheet name
+            "A:L",                    // Just column range (default sheet)
         ];
 
         try {
@@ -365,12 +365,12 @@ class GoogleSheetsService {
     async createRecord(record: Omit<VinylRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<VinylRecord> {
         // Try multiple range formats like in getRecords
         const rangeFormats = [
-            "'Vinyl Collection'!A:K",  // Quoted sheet name with spaces
-            "Vinyl Collection!A:K",    // Unquoted sheet name with spaces
-            "'Vinyl_Collection'!A:K",  // Quoted sheet name with underscore
-            "Vinyl_Collection!A:K",    // Unquoted sheet name with underscore
-            "Sheet1!A:K",             // Common default sheet name
-            "A:K",                    // Just column range (default sheet)
+            "'Vinyl Collection'!A:L",  // Quoted sheet name with spaces
+            "Vinyl Collection!A:L",    // Unquoted sheet name with spaces
+            "'Vinyl_Collection'!A:L",  // Quoted sheet name with underscore
+            "Vinyl_Collection!A:L",    // Unquoted sheet name with underscore
+            "Sheet1!A:L",             // Common default sheet name
+            "A:L",                    // Just column range (default sheet)
         ];
 
         for (const range of rangeFormats) {
@@ -417,12 +417,12 @@ class GoogleSheetsService {
     async updateRecord(id: string, updates: Partial<VinylRecord>): Promise<VinylRecord | null> {
         // Try multiple range formats like in getRecords
         const rangeFormats = [
-            "'Vinyl Collection'!A:K",  // Quoted sheet name with spaces
-            "Vinyl Collection!A:K",    // Unquoted sheet name with spaces
-            "'Vinyl_Collection'!A:K",  // Quoted sheet name with underscore
-            "Vinyl_Collection!A:K",    // Unquoted sheet name with underscore
-            "Sheet1!A:K",             // Common default sheet name
-            "A:K",                    // Just column range (default sheet)
+            "'Vinyl Collection'!A:L",  // Quoted sheet name with spaces
+            "Vinyl Collection!A:L",    // Unquoted sheet name with spaces
+            "'Vinyl_Collection'!A:L",  // Quoted sheet name with underscore
+            "Vinyl_Collection!A:L",    // Unquoted sheet name with underscore
+            "Sheet1!A:L",             // Common default sheet name
+            "A:L",                    // Just column range (default sheet)
         ];
 
         try {
@@ -465,7 +465,7 @@ class GoogleSheetsService {
 
             for (const sheetName of sheetNames) {
                 try {
-                    const updateRange = `${sheetName}!A${recordIndex + 1}:K${recordIndex + 1}`;
+                    const updateRange = `${sheetName}!A${recordIndex + 1}:L${recordIndex + 1}`;
                     console.log(`📝 Trying update range: ${updateRange}`);
 
                     await this.sheets.spreadsheets.values.update({
@@ -506,12 +506,12 @@ class GoogleSheetsService {
     async deleteRecord(id: string): Promise<boolean> {
         // Try multiple range formats like in getRecords
         const rangeFormats = [
-            "'Vinyl Collection'!A:K",  // Quoted sheet name with spaces
-            "Vinyl Collection!A:K",    // Unquoted sheet name with spaces
-            "'Vinyl_Collection'!A:K",  // Quoted sheet name with underscore
-            "Vinyl_Collection!A:K",    // Unquoted sheet name with underscore
-            "Sheet1!A:K",             // Common default sheet name
-            "A:K",                    // Just column range (default sheet)
+            "'Vinyl Collection'!A:L",  // Quoted sheet name with spaces
+            "Vinyl Collection!A:L",    // Unquoted sheet name with spaces
+            "'Vinyl_Collection'!A:L",  // Quoted sheet name with underscore
+            "Vinyl_Collection!A:L",    // Unquoted sheet name with underscore
+            "Sheet1!A:L",             // Common default sheet name
+            "A:L",                    // Just column range (default sheet)
         ];
 
         try {
@@ -572,12 +572,12 @@ class GoogleSheetsService {
     async getStats(): Promise<VinylStats> {
         // Try multiple range formats like in getRecords
         const rangeFormats = [
-            "'Vinyl Collection'!A:K",  // Quoted sheet name with spaces
-            "Vinyl Collection!A:K",    // Unquoted sheet name with spaces
-            "'Vinyl_Collection'!A:K",  // Quoted sheet name with underscore
-            "Vinyl_Collection!A:K",    // Unquoted sheet name with underscore
-            "Sheet1!A:K",             // Common default sheet name
-            "A:K",                    // Just column range (default sheet)
+            "'Vinyl Collection'!A:L",  // Quoted sheet name with spaces
+            "Vinyl Collection!A:L",    // Unquoted sheet name with spaces
+            "'Vinyl_Collection'!A:L",  // Quoted sheet name with underscore
+            "Vinyl_Collection!A:L",    // Unquoted sheet name with underscore
+            "Sheet1!A:L",             // Common default sheet name
+            "A:L",                    // Just column range (default sheet)
         ];
 
         try {
@@ -646,12 +646,12 @@ class GoogleSheetsService {
     async getUniqueValues(field: 'artistName' | 'genre' | 'owner'): Promise<string[]> {
         // Try multiple range formats like in getRecords
         const rangeFormats = [
-            "'Vinyl Collection'!A:K",  // Quoted sheet name with spaces
-            "Vinyl Collection!A:K",    // Unquoted sheet name with spaces
-            "'Vinyl_Collection'!A:K",  // Quoted sheet name with underscore
-            "Vinyl_Collection!A:K",    // Unquoted sheet name with underscore
-            "Sheet1!A:K",             // Common default sheet name
-            "A:K",                    // Just column range (default sheet)
+            "'Vinyl Collection'!A:L",  // Quoted sheet name with spaces
+            "Vinyl Collection!A:L",    // Unquoted sheet name with spaces
+            "'Vinyl_Collection'!A:L",  // Quoted sheet name with underscore
+            "Vinyl_Collection!A:L",    // Unquoted sheet name with underscore
+            "Sheet1!A:L",             // Common default sheet name
+            "A:L",                    // Just column range (default sheet)
         ];
 
         try {

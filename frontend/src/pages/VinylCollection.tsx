@@ -211,6 +211,7 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
                             isPlaying={false}
                             onFavoriteToggle={() => { }}
                             onPlayClick={() => { }}
+                            onEditClick={handleEditClick}
                         />
                     ))}
                 </div>
