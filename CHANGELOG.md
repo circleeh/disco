@@ -1,3 +1,9 @@
+## [1.5.1](https://github.com/circleeh/disco/compare/v1.5.0...v1.5.1) (2025-06-24)
+
+### Bug Fixes
+
+* **frontend:** ⚡️ add default env vars for backend connection ([3f26dd0](https://github.com/circleeh/disco/commit/3f26dd0dba4b892a8e526d59e9d4246cc9a8e448))
+
 ## [1.5.0](https://github.com/circleeh/disco/compare/v1.4.1...v1.5.0) (2025-06-24)
 
 ### Features
