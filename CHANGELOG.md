@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/circleeh/disco/compare/v1.2.1...v1.3.0) (2025-06-24)
+
+### Features
+
+* **frontend:** 🔒️ change server port to 8080 for security ([35ed028](https://github.com/circleeh/disco/commit/35ed0282d467caff874fb30d864c0529b315bd14))
+
 ## [1.2.1](https://github.com/circleeh/disco/compare/v1.2.0...v1.2.1) (2025-06-24)
 
 ### Bug Fixes
