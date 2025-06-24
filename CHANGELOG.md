@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/circleeh/disco/compare/v1.3.0...v1.4.0) (2025-06-24)
+
+### Features
+
+* **frontend:** 🔒️ switch nginx to non-root user ([62a61cf](https://github.com/circleeh/disco/commit/62a61cf8ad43c88d0be73450a201cfb2ae96e51f))
+
 ## [1.3.0](https://github.com/circleeh/disco/compare/v1.2.1...v1.3.0) (2025-06-24)
 
 ### Features
