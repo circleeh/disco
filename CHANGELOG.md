@@ -1,3 +1,9 @@
+## [1.2.1](https://github.com/circleeh/disco/compare/v1.2.0...v1.2.1) (2025-06-24)
+
+### Bug Fixes
+
+* **nginx:** 🔥 remove optional API proxy configuration ([835d788](https://github.com/circleeh/disco/commit/835d788bcefaa9c92c282d764f69d6539b6b15e4))
+
 ## [1.2.0](https://github.com/circleeh/disco/compare/v1.1.0...v1.2.0) (2025-06-24)
 
 ### Features
