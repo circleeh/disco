@@ -19,26 +19,14 @@ RUN npm run build
 # Production stage
 FROM nginx:alpine
 
-# Create non-root user
-RUN addgroup -g 1001 -S nginx && \
-    adduser -S -D -H -u 1001 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx
-
 # Copy built application from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Change ownership of nginx directories
-RUN chown -R nginx:nginx /var/cache/nginx && \
-    chown -R nginx:nginx /var/log/nginx && \
-    chown -R nginx:nginx /etc/nginx/conf.d && \
-    chown -R nginx:nginx /usr/share/nginx/html && \
-    touch /var/run/nginx.pid && \
-    chown -R nginx:nginx /var/run/nginx.pid
-
-# Switch to non-root user
-USER nginx
+# Change ownership of nginx directories to nginx user
+RUN chown -R nginx:nginx /usr/share/nginx/html
 
 # Expose port 8080
 EXPOSE 8080
