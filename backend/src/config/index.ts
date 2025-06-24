@@ -36,7 +36,11 @@ export const config: Config = {
     googleServiceAccountEmail: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL!,
     googlePrivateKey: process.env.GOOGLE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
     sessionSecret: process.env.SESSION_SECRET!,
-    frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000'
+    frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
+    // Cache configuration
+    cacheTTL: parseInt(process.env.CACHE_TTL || '300000', 10), // 5 minutes in milliseconds
+    cacheInvalidationInterval: parseInt(process.env.CACHE_INVALIDATION_INTERVAL || '1800000', 10), // 30 minutes in milliseconds
+    enableCache: process.env.ENABLE_CACHE !== 'false' // Default to true
 };
 
 // Validate configuration

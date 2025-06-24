@@ -34,3 +34,24 @@ export const getOwners = async (req: Request, res: Response): Promise<void> => {
         serverErrorResponse(res, 'Failed to fetch owners');
     }
 };
+
+// Cache management endpoints
+export const invalidateCache = async (req: Request, res: Response): Promise<void> => {
+    try {
+        await googleSheetsService.invalidateAllCache();
+        successResponse(res, { message: 'Cache invalidated successfully' });
+    } catch (error) {
+        console.error('Error invalidating cache:', error);
+        serverErrorResponse(res, 'Failed to invalidate cache');
+    }
+};
+
+export const getCacheStatus = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const cacheStatus = await googleSheetsService.getCacheStatus();
+        successResponse(res, cacheStatus);
+    } catch (error) {
+        console.error('Error getting cache status:', error);
+        serverErrorResponse(res, 'Failed to get cache status');
+    }
+};

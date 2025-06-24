@@ -88,6 +88,7 @@ configuration. This is the intended architecture for development.
 - **[Development Guide](docs/DEVELOPMENT.md)** - Comprehensive development setup and workflow
 - **[API Documentation](docs/API.md)** - Backend API endpoints and usage
 - **[Architecture Plan](ARCHITECTURE_PLAN.md)** - System architecture and design decisions
+- **[Caching Solution](docs/CACHING.md)** - Google Sheets API caching to prevent quota limits
 
 ## Google Cloud Configuration
 
@@ -160,7 +161,24 @@ GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\
 GOOGLE_SHEET_ID=your_sheet_id_here
 ```
 
-### 7. Get Your Google Sheet ID
+### 7. Cache Configuration (Optional)
+
+The application includes a caching system to prevent Google Sheets API quota limits. You can configure cache behavior with these environment variables:
+
+```bash
+# Enable/disable cache (default: true)
+ENABLE_CACHE=true
+
+# Cache TTL in milliseconds (default: 5 minutes)
+CACHE_TTL=300000
+
+# Cache invalidation interval in milliseconds (default: 30 minutes)
+CACHE_INVALIDATION_INTERVAL=1800000
+```
+
+**Note**: The cache is enabled by default and will significantly reduce API calls to Google Sheets. See [Caching Solution](docs/CACHING.md) for detailed information.
+
+### 8. Get Your Google Sheet ID
 
 The sheet ID is in the URL of your Google Sheet:
 
@@ -168,7 +186,7 @@ The sheet ID is in the URL of your Google Sheet:
 https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_HERE/edit
 ```
 
-### 8. Configure Vite Proxy (for development)
+### 9. Configure Vite Proxy (for development)
 
 Make sure your `vite.config.ts` has the proxy configuration to forward API calls
 to your backend:

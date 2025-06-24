@@ -16,4 +16,11 @@ router.get('/genres', metadataController.getGenres);
 // GET /api/metadata/owners - Get all unique owners
 router.get('/owners', metadataController.getOwners);
 
+// Cache management routes
+// POST /api/metadata/cache/invalidate - Invalidate all cache
+router.post('/cache/invalidate', metadataController.invalidateCache);
+
+// GET /api/metadata/cache/status - Get cache status
+router.get('/cache/status', metadataController.getCacheStatus);
+
 export default router;

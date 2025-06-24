@@ -108,4 +108,8 @@ export interface Config {
     googlePrivateKey: string;
     sessionSecret: string;
     frontendUrl: string;
+    // Cache configuration
+    cacheTTL: number;
+    cacheInvalidationInterval: number;
+    enableCache: boolean;
 }
