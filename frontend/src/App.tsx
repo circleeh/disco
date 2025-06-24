@@ -27,10 +27,10 @@ function App() {
     console.log('🚀 App component rendering');
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-midcentury-cream text-midcentury-charcoal font-sans">
             <Header />
             <main className="py-8">
-                <div className="px-4 sm:px-6 lg:px-8">
+                <div className="px-4 sm:px-6 lg:px-8 rounded-lg shadow-lg bg-white/80 border border-midcentury-walnut">
                     <Routes>
                         <Route
                             path="/"

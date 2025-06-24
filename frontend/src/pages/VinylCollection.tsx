@@ -85,14 +85,14 @@ const VinylCollection: React.FC = () => {
             <div className="mb-8">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">My Vinyl Collection</h1>
-                        <p className="text-gray-600 mt-1">
+                        <h1 className="text-2xl font-bold text-midcentury-charcoal" style={{ fontFamily: 'Avenir, sans-serif' }}>My Vinyl Collection</h1>
+                        <p className="text-midcentury-olive mt-1">
                             {records.length} {records.length === 1 ? 'record' : 'records'}
                         </p>
                     </div>
                     <button
                         onClick={() => setShowAdd(true)}
-                        className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                        className="px-4 py-2 bg-midcentury-mustard text-white rounded-lg hover:bg-midcentury-burntOrange transition-colors"
                     >
                         Add Record
                     </button>
@@ -101,8 +101,8 @@ const VinylCollection: React.FC = () => {
 
             {/* Add/Edit Form */}
             {(showAdd || editingRecord) && (
-                <div className="mb-8 bg-white rounded-lg border border-gray-200 p-6">
-                    <h3 className="text-lg font-semibold mb-4">
+                <div className="mb-8 bg-midcentury-cream rounded-lg border border-midcentury-walnut p-6">
+                    <h3 className="text-lg font-semibold mb-4 text-midcentury-charcoal">
                         {editingRecord ? 'Edit Record' : 'Add New Record'}
                     </h3>
                     <VinylForm
@@ -117,8 +117,8 @@ const VinylCollection: React.FC = () => {
             {/* Loading State */}
             {loading && (
                 <div className="text-center py-12">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-                    <p className="text-gray-600 mt-2">Loading...</p>
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-midcentury-mustard"></div>
+                    <p className="text-midcentury-charcoal mt-2">Loading...</p>
                 </div>
             )}
 
@@ -132,10 +132,10 @@ const VinylCollection: React.FC = () => {
             {/* Empty State */}
             {!loading && !error && records.length === 0 && (
                 <div className="text-center py-12">
-                    <p className="text-gray-500 mb-4">No records found.</p>
+                    <p className="text-midcentury-charcoal mb-4">No records found.</p>
                     <button
                         onClick={() => setShowAdd(true)}
-                        className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                        className="px-4 py-2 bg-midcentury-mustard text-white rounded-lg hover:bg-midcentury-burntOrange"
                     >
                         Add Your First Record
                     </button>
@@ -148,14 +148,14 @@ const VinylCollection: React.FC = () => {
                     {records.map((record) => (
                         <div
                             key={record.id}
-                            className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
+                            className="bg-midcentury-cream rounded-lg border border-midcentury-walnut p-4 hover:shadow-md transition-shadow"
                         >
                             <div className="flex justify-between items-start mb-3">
                                 <div className="flex-1">
-                                    <h3 className="font-semibold text-gray-900 mb-1">
+                                    <h3 className="font-semibold text-midcentury-charcoal mb-1">
                                         {record.artistName || 'Unknown Artist'}
                                     </h3>
-                                    <h4 className="text-gray-700 text-sm">
+                                    <h4 className="text-midcentury-olive text-sm">
                                         {record.albumName || 'Unknown Album'}
                                     </h4>
                                 </div>
@@ -164,7 +164,7 @@ const VinylCollection: React.FC = () => {
                                 </span>
                             </div>
 
-                            <div className="space-y-1 text-sm text-gray-600 mb-3">
+                            <div className="space-y-1 text-sm text-midcentury-charcoal mb-3">
                                 <div>{record.year || 'Unknown Year'} • {record.format || 'Vinyl'}</div>
                                 <div>{record.genre || 'Unknown Genre'}</div>
                                 <div>Owner: {record.owner || 'Unknown'}</div>
@@ -172,14 +172,14 @@ const VinylCollection: React.FC = () => {
                             </div>
 
                             {record.notes && (
-                                <div className="text-xs text-gray-500 mb-3 border-t pt-2">
+                                <div className="text-xs text-midcentury-olive mb-3 border-t pt-2">
                                     {record.notes}
                                 </div>
                             )}
 
                             <button
                                 onClick={() => handleEditClick(record)}
-                                className="w-full text-sm text-primary-600 hover:text-primary-700 font-medium py-2 border-t border-gray-100"
+                                className="w-full text-sm text-midcentury-burntOrange hover:text-midcentury-charcoal font-medium py-2 border-t border-gray-100"
                                 disabled={editingRecord?.id === record.id}
                             >
                                 Edit
