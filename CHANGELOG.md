@@ -1,3 +1,9 @@
+## [1.8.0](https://github.com/circleeh/disco/compare/v1.7.1...v1.8.0) (2025-06-25)
+
+### Features
+
+* **frontend:** 🔍️ add social media cards for improved SEO ([f2de7ff](https://github.com/circleeh/disco/commit/f2de7ff477dde71c3b6fd204406c529aa26463bd))
+
 ## [1.7.1](https://github.com/circleeh/disco/compare/v1.7.0...v1.7.1) (2025-06-25)
 
 ### Bug Fixes
