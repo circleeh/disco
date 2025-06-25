@@ -1,3 +1,9 @@
+## [1.7.0](https://github.com/circleeh/disco/compare/v1.6.0...v1.7.0) (2025-06-25)
+
+### Features
+
+* **vinyl:** 🦺 add format validation and sanitization ([85b54e2](https://github.com/circleeh/disco/commit/85b54e26f8d02d310c3b78f1064b86e59e92ecb5))
+
 ## [1.6.0](https://github.com/circleeh/disco/compare/v1.5.2...v1.6.0) (2025-06-25)
 
 ### Features
