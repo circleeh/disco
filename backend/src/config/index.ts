@@ -11,9 +11,14 @@ const requiredEnvVars = [
     'JWT_SECRET',
     'GOOGLE_SHEETS_ID',
     'GOOGLE_SERVICE_ACCOUNT_EMAIL',
-    'GOOGLE_PRIVATE_KEY',
     'SESSION_SECRET'
 ];
+
+// Check for either GOOGLE_PRIVATE_KEY or GOOGLE_PRIVATE_KEY_BASE64
+if (!process.env.GOOGLE_PRIVATE_KEY && !process.env.GOOGLE_PRIVATE_KEY_BASE64) {
+    console.error('Missing required environment variable: GOOGLE_PRIVATE_KEY or GOOGLE_PRIVATE_KEY_BASE64');
+    process.exit(1);
+}
 
 const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
@@ -34,7 +39,9 @@ export const config: Config = {
     jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
     googleSheetsId: process.env.GOOGLE_SHEETS_ID!,
     googleServiceAccountEmail: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL!,
-    googlePrivateKey: process.env.GOOGLE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
+    googlePrivateKey: process.env.GOOGLE_PRIVATE_KEY_BASE64
+        ? Buffer.from(process.env.GOOGLE_PRIVATE_KEY_BASE64, 'base64').toString('utf-8')
+        : process.env.GOOGLE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
     sessionSecret: process.env.SESSION_SECRET!,
     frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
     // Cache configuration

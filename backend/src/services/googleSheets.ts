@@ -32,11 +32,14 @@ class GoogleSheetsService {
         this.cacheTTL = config.cacheTTL;
         this.cacheInvalidationInterval = config.cacheInvalidationInterval;
 
+        // Format the private key to handle literal '\n' characters
+        const privateKey = config.googlePrivateKey.replace(/\\n/g, '\n');
+
         // Initialize Google Sheets API
         const auth = new google.auth.GoogleAuth({
             credentials: {
                 client_email: config.googleServiceAccountEmail,
-                private_key: config.googlePrivateKey,
+                private_key: privateKey,
             },
             scopes: ['https://www.googleapis.com/auth/spreadsheets'],
         });
@@ -251,7 +254,7 @@ class GoogleSheetsService {
             formatGoogleSheetsRange(),
             formatGoogleSheetsRangeAlternative(),
             formatGoogleSheetsRangeWithTable('Vinyl_Collection'),
-            'A:K', // Fallback to just column range
+            'A:L', // Fallback to just column range
         ];
 
         try {
