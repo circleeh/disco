@@ -1,3 +1,9 @@
+## [1.5.2](https://github.com/circleeh/disco/compare/v1.5.1...v1.5.2) (2025-06-25)
+
+### Bug Fixes
+
+* **frontend:** 🔨 update Dockerfile for env var substitution ([f81ff86](https://github.com/circleeh/disco/commit/f81ff8604faca1843316159c8cfc9f8d1915fbcf))
+
 ## [1.5.1](https://github.com/circleeh/disco/compare/v1.5.0...v1.5.1) (2025-06-24)
 
 ### Bug Fixes
