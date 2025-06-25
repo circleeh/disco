@@ -3,6 +3,7 @@ import { successResponse, serverErrorResponse } from '../utils';
 import googleSheetsService from '../services/googleSheets';
 import musicbrainzService from '../services/musicbrainz';
 import imageSearchService from '../services/imageSearch';
+import axios from 'axios';
 
 // Get all unique artist names
 export const getArtists = async (req: Request, res: Response): Promise<void> => {
@@ -69,6 +70,24 @@ export const getCacheStatus = async (req: Request, res: Response): Promise<void>
     }
 };
 
+/**
+ * Helper function to check if cover art exists for a release
+ */
+async function checkCoverArtExists(releaseId: string): Promise<boolean> {
+    try {
+        const coverUrl = `https://coverartarchive.org/release/${releaseId}/front`;
+        await axios.head(coverUrl, {
+            timeout: 5000,
+            headers: {
+                'User-Agent': 'DiscoVinylApp/1.0'
+            }
+        });
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
 // Search for album metadata
 export const searchAlbumMetadata = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -86,22 +105,34 @@ export const searchAlbumMetadata = async (req: Request, res: Response): Promise<
         // For each result, check if cover art exists and download it
         const resultsWithCoverArt = await Promise.all(
             results.map(async (metadata) => {
-                if (metadata.coverArtUrl) {
+                if (metadata.releaseId) {
                     try {
-                        // Download and optimize the cover art
-                        const base64Data = await imageSearchService.downloadImageAsBase64(metadata.coverArtUrl);
-                        const optimizedBase64 = await imageSearchService.optimizeBase64Image(base64Data);
+                        // Check if cover art exists first
+                        const hasCoverArt = await checkCoverArtExists(metadata.releaseId);
 
+                        if (hasCoverArt) {
+                            // Generate the cover art URL and download it
+                            const coverArtUrl = `https://coverartarchive.org/release/${metadata.releaseId}/front`;
+                            const base64Data = await imageSearchService.downloadImageAsBase64(coverArtUrl);
+                            const optimizedBase64 = await imageSearchService.optimizeBase64Image(base64Data);
+
+                            return {
+                                ...metadata,
+                                coverArtUrl: optimizedBase64,
+                                hasCoverArt: true
+                            };
+                        } else {
+                            // No cover art available
+                            return {
+                                ...metadata,
+                                hasCoverArt: false
+                            };
+                        }
+                    } catch (error) {
+                        console.error('Error processing cover art for release:', metadata.releaseId, error);
+                        // Return metadata without cover art on error
                         return {
                             ...metadata,
-                            coverArtUrl: optimizedBase64,
-                            hasCoverArt: true
-                        };
-                    } catch (error) {
-                        // Cover art doesn't exist, remove the URL
-                        const { coverArtUrl, ...metadataWithoutCover } = metadata;
-                        return {
-                            ...metadataWithoutCover,
                             hasCoverArt: false
                         };
                     }
@@ -140,21 +171,34 @@ export const searchByArtist = async (req: Request, res: Response): Promise<void>
         // For each result, check if cover art exists
         const resultsWithCoverArt = await Promise.all(
             results.map(async (metadata) => {
-                if (metadata.coverArtUrl) {
+                if (metadata.releaseId) {
                     try {
-                        // Download and optimize the cover art
-                        const base64Data = await imageSearchService.downloadImageAsBase64(metadata.coverArtUrl);
-                        const optimizedBase64 = await imageSearchService.optimizeBase64Image(base64Data);
+                        // Check if cover art exists first
+                        const hasCoverArt = await checkCoverArtExists(metadata.releaseId);
 
+                        if (hasCoverArt) {
+                            // Generate the cover art URL and download it
+                            const coverArtUrl = `https://coverartarchive.org/release/${metadata.releaseId}/front`;
+                            const base64Data = await imageSearchService.downloadImageAsBase64(coverArtUrl);
+                            const optimizedBase64 = await imageSearchService.optimizeBase64Image(base64Data);
+
+                            return {
+                                ...metadata,
+                                coverArtUrl: optimizedBase64,
+                                hasCoverArt: true
+                            };
+                        } else {
+                            // No cover art available
+                            return {
+                                ...metadata,
+                                hasCoverArt: false
+                            };
+                        }
+                    } catch (error) {
+                        console.error('Error processing cover art for release:', metadata.releaseId, error);
+                        // Return metadata without cover art on error
                         return {
                             ...metadata,
-                            coverArtUrl: optimizedBase64,
-                            hasCoverArt: true
-                        };
-                    } catch (error) {
-                        const { coverArtUrl, ...metadataWithoutCover } = metadata;
-                        return {
-                            ...metadataWithoutCover,
                             hasCoverArt: false
                         };
                     }
@@ -193,21 +237,34 @@ export const searchByAlbum = async (req: Request, res: Response): Promise<void> 
         // For each result, check if cover art exists
         const resultsWithCoverArt = await Promise.all(
             results.map(async (metadata) => {
-                if (metadata.coverArtUrl) {
+                if (metadata.releaseId) {
                     try {
-                        // Download and optimize the cover art
-                        const base64Data = await imageSearchService.downloadImageAsBase64(metadata.coverArtUrl);
-                        const optimizedBase64 = await imageSearchService.optimizeBase64Image(base64Data);
+                        // Check if cover art exists first
+                        const hasCoverArt = await checkCoverArtExists(metadata.releaseId);
 
+                        if (hasCoverArt) {
+                            // Generate the cover art URL and download it
+                            const coverArtUrl = `https://coverartarchive.org/release/${metadata.releaseId}/front`;
+                            const base64Data = await imageSearchService.downloadImageAsBase64(coverArtUrl);
+                            const optimizedBase64 = await imageSearchService.optimizeBase64Image(base64Data);
+
+                            return {
+                                ...metadata,
+                                coverArtUrl: optimizedBase64,
+                                hasCoverArt: true
+                            };
+                        } else {
+                            // No cover art available
+                            return {
+                                ...metadata,
+                                hasCoverArt: false
+                            };
+                        }
+                    } catch (error) {
+                        console.error('Error processing cover art for release:', metadata.releaseId, error);
+                        // Return metadata without cover art on error
                         return {
                             ...metadata,
-                            coverArtUrl: optimizedBase64,
-                            hasCoverArt: true
-                        };
-                    } catch (error) {
-                        const { coverArtUrl, ...metadataWithoutCover } = metadata;
-                        return {
-                            ...metadataWithoutCover,
                             hasCoverArt: false
                         };
                     }
@@ -251,21 +308,34 @@ export const searchByArtistAndAlbum = async (req: Request, res: Response): Promi
         // For each result, check if cover art exists
         const resultsWithCoverArt = await Promise.all(
             results.map(async (metadata) => {
-                if (metadata.coverArtUrl) {
+                if (metadata.releaseId) {
                     try {
-                        // Download and optimize the cover art
-                        const base64Data = await imageSearchService.downloadImageAsBase64(metadata.coverArtUrl);
-                        const optimizedBase64 = await imageSearchService.optimizeBase64Image(base64Data);
+                        // Check if cover art exists first
+                        const hasCoverArt = await checkCoverArtExists(metadata.releaseId);
 
+                        if (hasCoverArt) {
+                            // Generate the cover art URL and download it
+                            const coverArtUrl = `https://coverartarchive.org/release/${metadata.releaseId}/front`;
+                            const base64Data = await imageSearchService.downloadImageAsBase64(coverArtUrl);
+                            const optimizedBase64 = await imageSearchService.optimizeBase64Image(base64Data);
+
+                            return {
+                                ...metadata,
+                                coverArtUrl: optimizedBase64,
+                                hasCoverArt: true
+                            };
+                        } else {
+                            // No cover art available
+                            return {
+                                ...metadata,
+                                hasCoverArt: false
+                            };
+                        }
+                    } catch (error) {
+                        console.error('Error processing cover art for release:', metadata.releaseId, error);
+                        // Return metadata without cover art on error
                         return {
                             ...metadata,
-                            coverArtUrl: optimizedBase64,
-                            hasCoverArt: true
-                        };
-                    } catch (error) {
-                        const { coverArtUrl, ...metadataWithoutCover } = metadata;
-                        return {
-                            ...metadataWithoutCover,
                             hasCoverArt: false
                         };
                     }
@@ -309,19 +379,20 @@ export const getReleaseMetadata = async (req: Request, res: Response): Promise<v
         // Check if cover art exists
         let hasCoverArt = false;
         let optimizedCoverArt = null;
-        if (metadata.coverArtUrl) {
+        if (metadata.releaseId) {
             try {
-                // Download and optimize the cover art
-                const base64Data = await imageSearchService.downloadImageAsBase64(metadata.coverArtUrl);
-                optimizedCoverArt = await imageSearchService.optimizeBase64Image(base64Data);
-                hasCoverArt = true;
+                // Check if cover art exists first
+                hasCoverArt = await checkCoverArtExists(metadata.releaseId);
+
+                if (hasCoverArt) {
+                    // Generate the cover art URL and download it
+                    const coverArtUrl = `https://coverartarchive.org/release/${metadata.releaseId}/front`;
+                    const base64Data = await imageSearchService.downloadImageAsBase64(coverArtUrl);
+                    optimizedCoverArt = await imageSearchService.optimizeBase64Image(base64Data);
+                }
             } catch (error) {
-                const { coverArtUrl, ...metadataWithoutCover } = metadata;
-                successResponse(res, {
-                    ...metadataWithoutCover,
-                    hasCoverArt: false
-                });
-                return;
+                console.error('Error processing cover art for release:', metadata.releaseId, error);
+                hasCoverArt = false;
             }
         }
 

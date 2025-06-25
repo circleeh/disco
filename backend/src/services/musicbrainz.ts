@@ -22,6 +22,7 @@ interface MusicBrainzRelease {
 }
 
 interface AlbumMetadata {
+    releaseId?: string;
     artistName: string;
     albumName: string;
     year: number;
@@ -204,16 +205,6 @@ class MusicBrainzService {
                 }
             }
 
-            // Check if cover art exists
-            let coverArtUrl: string | undefined;
-            try {
-                const coverUrl = `https://coverartarchive.org/release/${release.id}/front`;
-                // We'll test this in the controller when needed
-                coverArtUrl = coverUrl;
-            } catch (error) {
-                // No cover art available
-            }
-
             // Extract label
             const label = release['label-info']?.[0]?.label?.name;
 
@@ -229,10 +220,10 @@ class MusicBrainzService {
             }
 
             return {
+                releaseId: release.id,
                 artistName,
                 albumName,
                 year,
-                coverArtUrl,
                 label,
                 format
             };
