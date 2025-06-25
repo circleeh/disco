@@ -1,3 +1,13 @@
+## [1.6.0](https://github.com/circleeh/disco/compare/v1.5.2...v1.6.0) (2025-06-25)
+
+### Features
+
+* **backend:** 🔐 support base64 encoded Google private key ([d8616e3](https://github.com/circleeh/disco/commit/d8616e39382ac072129304874856ffd62454de67))
+
+### Bug Fixes
+
+* **frontend:** 🔨 remove trailing slash from proxy_pass URL ([79065f1](https://github.com/circleeh/disco/commit/79065f1f4358dc167f7ba3f0ea0c44113cd284da))
+
 ## [1.5.2](https://github.com/circleeh/disco/compare/v1.5.1...v1.5.2) (2025-06-25)
 
 ### Bug Fixes
