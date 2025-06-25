@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { successResponse, notFoundResponse, serverErrorResponse } from '../utils';
+import { successResponse, notFoundResponse, serverErrorResponse, validateAndSanitizeFormat } from '../utils';
 import { VinylFilters, VinylRecord } from '../types';
 import googleSheetsService from '../services/googleSheets';
 import imageSearchService from '../services/imageSearch';
@@ -44,6 +44,9 @@ export const createRecord = async (req: Request, res: Response): Promise<void> =
     try {
         const recordData = req.body;
 
+        // Validate and sanitize format
+        recordData.format = validateAndSanitizeFormat(recordData.format);
+
         // Optimize cover art if present
         if (recordData.coverArt) {
             console.log('🖼️ Optimizing cover art for new record');
@@ -72,6 +75,11 @@ export const updateRecord = async (req: Request, res: Response): Promise<void> =
         const { id } = req.params;
         const decodedId = decodeURIComponent(id);
         const updates = req.body;
+
+        // Validate and sanitize format if it's being updated
+        if (updates.format !== undefined) {
+            updates.format = validateAndSanitizeFormat(updates.format);
+        }
 
         // Optimize cover art if present
         if (updates.coverArt) {

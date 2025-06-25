@@ -20,7 +20,7 @@ export interface VinylRecordWithNulls {
     artistName: string | null;
     albumName: string | null;
     year: number | null;
-    format: 'Vinyl' | 'CD' | 'Cassette' | 'Digital' | null;
+    format: 'LP' | 'EP' | '7" Single' | '10" Single' | '12" Single' | '10" EP' | '12" EP' | '12" LP' | null;
     genre: string | null;
     price: number | null;
     owner: string | null;

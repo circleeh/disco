@@ -81,6 +81,22 @@ export const sanitizeString = (str: string): string => {
     return str.trim().replace(/[<>]/g, '');
 };
 
+// Format validation utility
+export const validateAndSanitizeFormat = (format: any): string => {
+    const validFormats = ['LP', 'EP', '7" Single', '10" Single', '12" Single', '10" EP', '12" EP', '12" LP'];
+
+    if (!format || format === '' || format === null || format === undefined) {
+        return 'LP'; // Default to LP
+    }
+
+    const formatStr = format.toString().trim();
+    if (validFormats.includes(formatStr)) {
+        return formatStr;
+    }
+
+    return 'LP'; // Default to LP if invalid
+};
+
 // Date utilities
 export const formatDate = (date: Date): string => {
     return date.toISOString();
@@ -153,7 +169,7 @@ export const parseGoogleSheetsRow = (row: any[]): any => {
         artistName: row[0] || '',
         albumName: row[1] || '',
         year: row[2] ? parseInt(row[2].toString(), 10) || 0 : 0,
-        format: row[3] || 'Vinyl',
+        format: validateAndSanitizeFormat(row[3]),
         genre: row[4] || '',
         price: parsedPrice,
         owner: row[6] || '',

@@ -4,6 +4,7 @@ import { VinylRecord } from '../types/vinyl';
 import VinylCard from '../components/vinyl/VinylCard';
 import VinylListItem from '../components/vinyl/VinylListItem';
 import VinylForm from '../components/forms/VinylForm';
+import EditVinylModal from '../components/ui/EditVinylModal';
 import CollectionControls from '../components/ui/CollectionControls';
 import AlbumFilterModal from '../components/ui/AlbumFilterModal';
 import { useAuth } from '../stores/AuthContext';
@@ -165,20 +166,28 @@ const VinylCollection: React.FC<VinylCollectionProps> = ({ showAdd, setShowAdd }
                 onApply={newFilters => setFilters({ ...newFilters, page: 1, limit: filters.limit, sortBy: filters.sortBy, sortOrder: filters.sortOrder })}
             />
 
-            {/* Add/Edit Form */}
-            {(showAdd || editingRecord) && (
+            {/* Add Form - only for adding new records */}
+            {showAdd && (
                 <div className="mb-8 bg-midcentury-cream rounded-lg border border-midcentury-walnut p-6">
                     <h3 className="text-lg font-semibold mb-4 text-midcentury-charcoal">
-                        {editingRecord ? 'Edit Record' : 'Add New Record'}
+                        Add New Record
                     </h3>
                     <VinylForm
-                        initial={editingRecord || undefined}
-                        onSubmit={editingRecord ? handleEdit : handleAdd}
-                        onCancel={editingRecord ? handleCancelEdit : () => setShowAdd(false)}
+                        onSubmit={handleAdd}
+                        onCancel={() => setShowAdd(false)}
                         loading={saving}
                     />
                 </div>
             )}
+
+            {/* Edit Modal */}
+            <EditVinylModal
+                isOpen={!!editingRecord}
+                onClose={handleCancelEdit}
+                record={editingRecord}
+                onSubmit={handleEdit}
+                loading={saving}
+            />
 
             {/* Loading State */}
             {loading && (
