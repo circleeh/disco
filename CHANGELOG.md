@@ -1,3 +1,9 @@
+## [1.7.1](https://github.com/circleeh/disco/compare/v1.7.0...v1.7.1) (2025-06-25)
+
+### Bug Fixes
+
+* **metadata:** ➕ add cover art existence check for releases ([2272428](https://github.com/circleeh/disco/commit/227242876c8e9b633eadd06216386c5c484468d4))
+
 ## [1.7.0](https://github.com/circleeh/disco/compare/v1.6.0...v1.7.0) (2025-06-25)
 
 ### Features
