@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Card Test - Disco</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .card-preview {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-card {
+            width: 100%;
+            max-width: 600px;
+            height: 315px;
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+        }
+
+        .social-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .test-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .test-links a {
+            padding: 10px 15px;
+            background: #fbbf24;
+            color: #1f2937;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .test-links a:hover {
+            background: #f59e0b;
+        }
+
+        .meta-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🎵 Disco Social Media Card Test</h1>
+
+    <div class="card-preview">
+        <h2>Social Media Card Preview</h2>
+        <p>This is how your app will appear when shared on social media platforms:</p>
+
+        <div class="social-card">
+            <img src="/social-card.png" alt="Disco Vinyl Collection Manager" />
+        </div>
+
+        <div class="test-links">
+            <a href="https://developers.facebook.com/tools/debug/" target="_blank">Facebook Debugger</a>
+            <a href="https://cards-dev.twitter.com/validator" target="_blank">Twitter Card Validator</a>
+            <a href="https://www.linkedin.com/post-inspector/" target="_blank">LinkedIn Post Inspector</a>
+            <a href="https://search.google.com/test/rich-results" target="_blank">Google Rich Results Test</a>
+        </div>
+    </div>
+
+    <div class="card-preview">
+        <h2>Meta Tags Summary</h2>
+        <div class="meta-info">
+            <strong>Title:</strong> Disco - Vinyl Collection Manager<br>
+            <strong>Description:</strong> Manage your vinyl record collection with style. Track albums, search metadata,
+            and discover new music with our comprehensive vinyl management app.<br>
+            <strong>Image:</strong> https://disco.poupart.farm/social-card.png (1200x630)<br>
+            <strong>URL:</strong> https://disco.poupart.farm/<br>
+            <strong>Type:</strong> website<br>
+            <strong>Twitter Card:</strong> summary_large_image
+        </div>
+    </div>
+
+    <div class="card-preview">
+        <h2>Testing Instructions</h2>
+        <ol>
+            <li>Copy your app URL: <code>https://disco.poupart.farm/</code></li>
+            <li>Use the test tools above to validate your social media cards</li>
+            <li>Try sharing your app on different social platforms</li>
+            <li>Check how it appears in messaging apps like WhatsApp, Discord, etc.</li>
+        </ol>
+
+        <h3>Expected Results:</h3>
+        <ul>
+            <li>✅ Beautiful vinyl-themed card with music elements</li>
+            <li>✅ Clear app name and description</li>
+            <li>✅ Professional 1200x630 image</li>
+            <li>✅ Proper Open Graph and Twitter Card tags</li>
+            <li>✅ Structured data for search engines</li>
+        </ul>
+    </div>
+
+    <div class="card-preview">
+        <h2>Features Added</h2>
+        <ul>
+            <li>🎨 Custom social media card design with vinyl records and music notes</li>
+            <li>📱 Open Graph tags for Facebook, LinkedIn, WhatsApp</li>
+            <li>🐦 Twitter Card tags for Twitter</li>
+            <li>🔍 Structured data (JSON-LD) for search engines</li>
+            <li>📱 Web app manifest for PWA features</li>
+            <li>🎯 SEO-optimized meta tags</li>
+            <li>📐 Proper image dimensions (1200x630)</li>
+        </ul>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,137 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1f2937;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#111827;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="vinylGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#374151;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1f2937;stop-opacity:1" />
+    </linearGradient>
+
+    <radialGradient id="centerGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+    </radialGradient>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+
+  <!-- Decorative background elements -->
+  <circle cx="100" cy="100" r="80" fill="url(#vinylGradient)" opacity="0.1"/>
+  <circle cx="1100" cy="530" r="120" fill="url(#vinylGradient)" opacity="0.1"/>
+  <circle cx="200" cy="500" r="60" fill="url(#vinylGradient)" opacity="0.1"/>
+
+  <!-- Vinyl records -->
+  <!-- Main vinyl record -->
+  <g transform="translate(300, 200)">
+    <circle cx="0" cy="0" r="120" fill="url(#vinylGradient)" stroke="#4b5563" stroke-width="2"/>
+    <circle cx="0" cy="0" r="15" fill="url(#centerGradient)"/>
+    <circle cx="0" cy="0" r="8" fill="#1f2937"/>
+
+    <!-- Grooves -->
+    <g opacity="0.3">
+      <circle cx="0" cy="0" r="25" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="35" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="45" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="55" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="65" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="75" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="85" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="95" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="105" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="115" fill="none" stroke="#6b7280" stroke-width="1"/>
+    </g>
+  </g>
+
+  <!-- Second vinyl record -->
+  <g transform="translate(500, 350)">
+    <circle cx="0" cy="0" r="80" fill="url(#vinylGradient)" stroke="#4b5563" stroke-width="2"/>
+    <circle cx="0" cy="0" r="10" fill="url(#centerGradient)"/>
+    <circle cx="0" cy="0" r="5" fill="#1f2937"/>
+
+    <!-- Grooves -->
+    <g opacity="0.3">
+      <circle cx="0" cy="0" r="20" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="30" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="40" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="50" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="60" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="70" fill="none" stroke="#6b7280" stroke-width="1"/>
+    </g>
+  </g>
+
+  <!-- Third vinyl record -->
+  <g transform="translate(150, 400)">
+    <circle cx="0" cy="0" r="60" fill="url(#vinylGradient)" stroke="#4b5563" stroke-width="2"/>
+    <circle cx="0" cy="0" r="8" fill="url(#centerGradient)"/>
+    <circle cx="0" cy="0" r="4" fill="#1f2937"/>
+
+    <!-- Grooves -->
+    <g opacity="0.3">
+      <circle cx="0" cy="0" r="15" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="25" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="35" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="45" fill="none" stroke="#6b7280" stroke-width="1"/>
+      <circle cx="0" cy="0" r="55" fill="none" stroke="#6b7280" stroke-width="1"/>
+    </g>
+  </g>
+
+  <!-- Music notes -->
+  <g fill="#fbbf24" opacity="0.8">
+    <!-- Eighth note -->
+    <g transform="translate(700, 150)">
+      <ellipse cx="0" cy="0" rx="8" ry="12"/>
+      <rect x="8" y="-40" width="4" height="40"/>
+      <ellipse cx="12" cy="-40" rx="6" ry="8"/>
+    </g>
+
+    <!-- Quarter note -->
+    <g transform="translate(750, 200)">
+      <ellipse cx="0" cy="0" rx="8" ry="12"/>
+      <rect x="8" y="-35" width="4" height="35"/>
+    </g>
+
+    <!-- Sixteenth note -->
+    <g transform="translate(800, 180)">
+      <ellipse cx="0" cy="0" rx="6" ry="10"/>
+      <rect x="6" y="-30" width="3" height="30"/>
+      <ellipse cx="9" cy="-30" rx="4" ry="6"/>
+      <ellipse cx="9" cy="-20" rx="4" ry="6"/>
+    </g>
+  </g>
+
+  <!-- Main title -->
+  <text x="600" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#fbbf24" filter="url(#glow)">
+    DISCO
+  </text>
+
+  <!-- Subtitle -->
+  <text x="600" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" fill="#e5e7eb">
+    Vinyl Collection Manager
+  </text>
+
+  <!-- Tagline -->
+  <text x="600" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#9ca3af">
+    Manage your music collection with style
+  </text>
+
+  <!-- Decorative line -->
+  <line x1="400" y1="420" x2="800" y2="420" stroke="#fbbf24" stroke-width="3" opacity="0.6"/>
+
+  <!-- Features -->
+  <g font-family="Arial, sans-serif" font-size="16" fill="#d1d5db">
+    <text x="600" y="460" text-anchor="middle">📀 Track Albums • 🎵 Search Metadata • 🎨 Beautiful UI</text>
+  </g>
+</svg>
